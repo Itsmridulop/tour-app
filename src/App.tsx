@@ -1,8 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 
 import AppLayout from './component/AppLayout'
-import Login from "./pages/Login"
-import Signup from "./pages/Signup"
+import Login from "./features/authentication/Login"
+import Signup from "./features/authentication/Signup"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 
 const router = createBrowserRouter([
   {
@@ -21,9 +22,19 @@ const router = createBrowserRouter([
   }
 ])
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0,
+    },
+  },
+})
+
 function App() {
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   )
 }
 
