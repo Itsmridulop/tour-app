@@ -1,14 +1,13 @@
 import { useForm } from "react-hook-form"
-import { LoginUserType } from "../../types/userType"
 import { useLogin } from "./useLogin"
 
 import Footer from "../../component/Footer"
 
 function Login() {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginUserType>()
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<{ email: string; password: string }>()
     const { login } = useLogin()
 
-    const submitHandler = (data: LoginUserType) => {
+    const submitHandler = (data: { email: string; password: string }) => {
         login(data, {
             onSettled: () => reset()
         })

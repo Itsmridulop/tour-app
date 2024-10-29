@@ -1,5 +1,5 @@
 import { ReactNode } from "react"
-import { auth } from "../api/signupApi"
+import { auth } from "../api/authApi"
 import { Navigate } from "react-router-dom"
 
 function ProtectedRoute({ children }: { children: ReactNode }) {

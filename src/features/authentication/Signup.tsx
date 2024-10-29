@@ -1,15 +1,14 @@
 import { useForm } from "react-hook-form"
-import { SignupUserType } from "../../types/userType"
 import { useSignup } from "./useSignup"
 
 import Footer from "../../component/Footer"
 
 function Signup() {
 
-  const { register, handleSubmit, getValues, reset, formState: { errors } } = useForm<SignupUserType>()
+  const { register, handleSubmit, getValues, reset, formState: { errors } } = useForm<{ email: string; name: string; password: string; confirmPassword: string }>()
   const { signup } = useSignup()
 
-  const submitHandler = (data: SignupUserType) => {
+  const submitHandler = (data: { email: string; name: string; password: string; confirmPassword: string }) => {
     signup(data, {
       onSettled: () => reset()
     })

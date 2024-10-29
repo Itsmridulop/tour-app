@@ -7,6 +7,7 @@ import AppLayout from './component/AppLayout'
 import Login from "./features/authentication/Login"
 import Signup from "./features/authentication/Signup"
 import ProtectedRoute from "./component/ProtectedRoute"
+import Tour from "./features/tours/Tour"
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <ProtectedRoute>
-          <div>Home</div>
+          <Tour/>
         </ProtectedRoute>
       }
     ]
