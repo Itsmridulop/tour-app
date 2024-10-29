@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import {  LoginUserType, SignupUserType, SignupResponseType, LoginRespondseType } from "../types/userType";
+import { ResponseType } from "../types/userType";
 
 class Authenication {
   private api: AxiosInstance;
@@ -13,9 +13,9 @@ class Authenication {
     });
   }
 
-  public async signup(userData: Partial<SignupUserType>): Promise<SignupResponseType> {
+  public async signup(userData: { name: string; email: string; password: string; confirmPassword: string }): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<SignupResponseType> = await this.api.post("/signup",userData);
+      const response: AxiosResponse<ResponseType> = await this.api.post("/signup", userData);
       this.saveToken(response.data.token);
       return response.data;
     } catch (error) {
@@ -24,9 +24,9 @@ class Authenication {
     }
   }
 
-  public async login(userData: Partial<LoginUserType>): Promise<LoginRespondseType> {
+  public async login(userData: { email: string; password: string }): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<LoginRespondseType> = await this.api.post("/login", userData);
+      const response: AxiosResponse<ResponseType> = await this.api.post("/login", userData);
       this.saveToken(response.data.token);
       return response.data;
     } catch (error) {

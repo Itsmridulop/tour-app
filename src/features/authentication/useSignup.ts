@@ -1,15 +1,25 @@
-import { useMutation } from "@tanstack/react-query"
-import { SignupUserType } from "../../types/userType"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { auth } from "../../api/signupApi"
+import { useNavigate } from "react-router-dom"
+
+import toast from "react-hot-toast"
 
 const useSignup = () => {
+    const navigate = useNavigate()
+    const queryCleint = useQueryClient()
+
     const { mutate: signup } = useMutation({
-        mutationFn: (userData: Partial<SignupUserType>) => auth.signup(userData),
-        onSuccess: () => {
-            console.log('success')
+        mutationFn: (userData: { name: string; password: string; confirmPassword: string; email: string }) => auth.signup(userData),
+        onSuccess: data => {
+            queryCleint.setQueryData(['user'], data)
+            navigate('/', {
+                replace: true
+            })
+            toast.success('Signup successfully')
         },
-        onError: () => {
-            console.log('error')
+        onError: error => {
+            toast.error(error.message)
+            console.error(error)
         }
     })
     return { signup }

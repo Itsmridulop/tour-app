@@ -17,7 +17,7 @@ function Signup() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <div className="flex flex-col flex-grow items-center justify-center">
+      <div className="flex flex-col mt-20 flex-grow items-center justify-center">
         <div className="bg-white shadow-2xl rounded-lg p-20 w-screen max-w-2xl mx-4 lg:mx-0">
           <h2 className="text-3xl font-semibold text-green-500 text-center mb-10">
             CREATE YOUR ACCOUNT!
