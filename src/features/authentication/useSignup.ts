@@ -8,7 +8,7 @@ const useSignup = () => {
     const navigate = useNavigate()
     const queryCleint = useQueryClient()
 
-    const { mutate: signup } = useMutation({
+    const { mutate: signup, isPending } = useMutation({
         mutationFn: (userData: { name: string; password: string; confirmPassword: string; email: string }) => auth.signup(userData),
         onSuccess: data => {
             queryCleint.setQueryData(['user'], data)
@@ -22,7 +22,7 @@ const useSignup = () => {
             console.error(error)
         }
     })
-    return { signup }
+    return { signup, isPending }
 }
 
 export { useSignup }

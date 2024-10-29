@@ -2,16 +2,19 @@ import { useForm } from "react-hook-form"
 import { useLogin } from "./useLogin"
 
 import Footer from "../../component/Footer"
+import Spinner from "../../component/Spinner";
 
 function Login() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<{ email: string; password: string }>()
-    const { login } = useLogin()
+    const { login, isPending } = useLogin()
 
     const submitHandler = (data: { email: string; password: string }) => {
         login(data, {
             onSettled: () => reset()
         })
     }
+
+    if (isPending) return <Spinner />
 
     return (
         <div className="flex flex-col min-h-screen bg-gray-100">

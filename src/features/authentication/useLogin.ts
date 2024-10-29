@@ -8,7 +8,7 @@ const useLogin = () => {
     const navigate = useNavigate()
     const queryCleint = useQueryClient()
 
-    const { mutate: login } = useMutation({
+    const { mutate: login, isPending } = useMutation({
         mutationFn: (data: { email: string; password: string }) => auth.login(data),
         onSuccess: data => {
             toast.success('Login Successfully')
@@ -22,7 +22,7 @@ const useLogin = () => {
             toast.error(error.message)
         }
     })
-    return { login }
+    return { login, isPending }
 }
 
 export { useLogin }
