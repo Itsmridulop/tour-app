@@ -8,6 +8,8 @@ import Login from "./features/authentication/Login"
 import Signup from "./features/authentication/Signup"
 import ProtectedRoute from "./component/ProtectedRoute"
 import Tour from "./features/tours/Tour"
+import Home from "./component/Home"
+import Users from "./features/users/Users"
 
 const router = createBrowserRouter([
   {
@@ -22,10 +24,19 @@ const router = createBrowserRouter([
         element: <Login />
       },
       {
-        path: '/',
         element: <ProtectedRoute>
-          <Tour/>
-        </ProtectedRoute>
+          <Home />
+        </ProtectedRoute>,
+        children: [
+          {
+            path: '/',
+            element: <Tour />
+          },
+          {
+            path: '/users',
+            element: <Users />
+          }
+        ]
       }
     ]
   }
@@ -42,33 +53,33 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools  initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} />
       <RouterProvider router={router} />
       <Toaster
-          position="top-center"
-          gutter={12}
-          containerStyle={
-            {
-              margin: "8px"
-            }}
-          toastOptions={
-            {
-              success: {
-                duration: 1000
-              },
-              error: {
-                duration: 3000
-              },
-              style: {
-                fontSize: '16px',
-                maxWidth: '500px',
-                padding: '16px 24px',
-                backgroundColor: '#b7b7b7',
-                color: '#303030'
-              }
+        position="top-center"
+        gutter={12}
+        containerStyle={
+          {
+            margin: "8px"
+          }}
+        toastOptions={
+          {
+            success: {
+              duration: 1000
+            },
+            error: {
+              duration: 3000
+            },
+            style: {
+              fontSize: '16px',
+              maxWidth: '500px',
+              padding: '16px 24px',
+              backgroundColor: '#b7b7b7',
+              color: '#303030'
             }
           }
-        />
+        }
+      />
     </QueryClientProvider>
   )
 }

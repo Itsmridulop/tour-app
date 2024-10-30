@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { auth } from "../api/authApi"
 import { useLogout } from "../features/authentication/useLogout"
+import { CiUser } from "react-icons/ci";
 
 function Navbar() {
   const { logout } = useLogout()
@@ -21,22 +22,24 @@ function Navbar() {
       </div>
 
       <div className="flex-1 flex justify-end items-center space-x-6">
-        {!auth.isAuthenticated() ?
+        {!auth.isAuthenticated() &&
           <Link to="/login">
             LOG IN
-          </Link> :
-          <button onClick={() => logout()}>
-            LOG OUT
-          </button>
+          </Link>
         }
-        {auth.isAuthenticated() || <Link
+        <Link
           to="/signup"
           className="border border-white rounded-full py-2 px-6 hover:bg-white hover:text-gray-800 transition duration-300"
         >
-          SIGN UP
-        </Link>}
+          {auth.isAuthenticated() ?
+            <button onClick={() => logout()}>
+              LOG OUT
+            </button> : 'SIGN UP'}
+        </Link>
+        <Link to='/users' className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition">
+          <CiUser className="text-2xl" />
+        </Link>
       </div>
-
     </nav >
   )
 }

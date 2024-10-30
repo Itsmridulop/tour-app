@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { ResponseType } from "../types/userType";
+import { ResponseType, UserPasswordType, UserProfileType, UserType } from "../types/userType";
 
 class Authenication {
   private api: AxiosInstance;
@@ -32,6 +32,50 @@ class Authenication {
     } catch (error) {
       console.error("Error while login into this account", error);
       throw error;
+    }
+  }
+
+  public async getCurrentUser(): Promise<UserType> {
+    try {
+      const response: AxiosResponse<UserType> = await this.api.get('/me', {
+        headers: {
+          'Authorization': `Bearer ${this.gettoken()}`
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.error('Error in getting your info', error)
+      throw error
+    }
+  }
+
+  public async updateProfile(userData: Partial<UserProfileType>): Promise<UserType> {
+    try {
+      const response: AxiosResponse<UserType> = await this.api.patch('/updateMe', userData, {
+        headers: {
+          'Authorization': `Bearer ${this.gettoken()}`
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.error('Error in update your profile', error)
+      throw error
+    }
+  }
+
+  public async updatePassword(passwordData: UserPasswordType): Promise<ResponseType> {
+    try {
+      const response: AxiosResponse<ResponseType> = await this.api.patch('/updatePassword', passwordData, {
+        headers: {
+          'Authorization': `Bearer ${this.gettoken()}`
+        }
+      })
+      this.removeToken()
+      this.saveToken(response.data.token)
+      return response.data
+    } catch (error) {
+      console.error('Error in update your password', error)
+      throw error
     }
   }
 
