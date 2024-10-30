@@ -11,11 +11,6 @@ export interface ResponseType {
   data: UserDataType;
 }
 
-export interface UserType {
-  status: string;
-  data: UserDataType[]
-}
-
 export interface UserProfileType {
   name: string;
   photo: string;

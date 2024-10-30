@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { ResponseType, UserPasswordType, UserProfileType, UserType } from "../types/userType";
+import { ResponseType, UserPasswordType, UserProfileType } from "../types/userType";
 
 class Authenication {
   private api: AxiosInstance;
@@ -35,9 +35,9 @@ class Authenication {
     }
   }
 
-  public async getCurrentUser(): Promise<UserType> {
+  public async getCurrentUser(): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<UserType> = await this.api.get('/me', {
+      const response: AxiosResponse<ResponseType> = await this.api.get('/me', {
         headers: {
           'Authorization': `Bearer ${this.gettoken()}`
         }
@@ -49,9 +49,9 @@ class Authenication {
     }
   }
 
-  public async updateProfile(userData: Partial<UserProfileType>): Promise<UserType> {
+  public async updateProfile(userData: Partial<UserProfileType>): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<UserType> = await this.api.patch('/updateMe', userData, {
+      const response: AxiosResponse<ResponseType> = await this.api.patch('/updateMe', userData, {
         headers: {
           'Authorization': `Bearer ${this.gettoken()}`
         }
@@ -75,6 +75,29 @@ class Authenication {
       return response.data
     } catch (error) {
       console.error('Error in update your password', error)
+      throw error
+    }
+  }
+
+  public async forgotPassword(data: {email: string}): Promise<{status: string; message: string }> {
+    try {
+      const response: AxiosResponse<{status: string; message: string}> = await this.api.post('/forgotPassword', data)
+      return response.data
+    } catch (error) {
+      console.error('Error while resettting your pasworrd', error)
+      throw error
+    }
+  }
+
+  public async resetPassword(data: {token?: string; password: string; confirmPassword: string}): Promise<ResponseType> {
+    try {
+      const response: AxiosResponse<ResponseType> = await this.api.patch(`/resetPassword/${data.token}`, {
+        password: data.password,
+        confirmPassword: data.confirmPassword
+      })
+      return response.data
+    } catch (error) {
+      console.error('Error while resetting your password', error)
       throw error
     }
   }

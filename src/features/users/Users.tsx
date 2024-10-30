@@ -10,7 +10,7 @@ function Users() {
 
     if (isLoading) return <Spinner />;
 
-    const role = user?.data[0].role;
+    const role = user?.data.role;
     const badgeText = role === 'guide' ? 'Guide'
         : role === 'lead-guide' ? 'Lead Guide'
             : role === 'admin' ? 'Admin'
@@ -23,7 +23,7 @@ function Users() {
 
                 <div className="relative w-32 h-32 mb-4">
                     <img
-                        src={`src/public/img/users/${user?.data[0].photo}`}
+                        src={`src/public/img/users/${user?.data.photo}`}
                         alt="Profile"
                         className="w-full h-full rounded-full object-cover shadow-md"
                     />
@@ -35,8 +35,8 @@ function Users() {
                 </div>
 
                 <div className="mb-8">
-                    <p className="text-2xl font-medium">{user?.data[0].name}</p>
-                    <p className="text-gray-500">{user?.data[0].email}</p>
+                    <p className="text-2xl font-medium">{user?.data.name}</p>
+                    <p className="text-gray-500">{user?.data.email}</p>
                 </div>
 
                 <div className="flex space-x-4">
@@ -47,7 +47,7 @@ function Users() {
                             </button>
                         </Modal.Open>
                         <Modal.Window name="updateProfile">
-                            <UpdateProfileForm user={user?.data[0]} />
+                            <UpdateProfileForm user={user?.data} />
                         </Modal.Window>
                         <Modal.Open opens="updatePassword">
                             <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md shadow hover:bg-gray-400 transition">

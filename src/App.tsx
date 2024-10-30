@@ -10,9 +10,11 @@ import ProtectedRoute from "./component/ProtectedRoute"
 import Tour from "./features/tours/Tour"
 import Home from "./component/Home"
 import Users from "./features/users/Users"
+import ForgotPasswordForm from "./features/authentication/ForgotPasswordForm"
 
 const router = createBrowserRouter([
   {
+
     element: <AppLayout />,
     children: [
       {
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
         path: '/login',
         element: <Login />
       },
+
       {
         element: <ProtectedRoute>
           <Home />
@@ -38,7 +41,11 @@ const router = createBrowserRouter([
           }
         ]
       }
-    ]
+    ],
+  },
+  {
+    path: '/resetPassword/:token',
+    element: <ForgotPasswordForm />
   }
 ])
 

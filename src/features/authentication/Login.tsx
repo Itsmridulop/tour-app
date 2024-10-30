@@ -3,6 +3,8 @@ import { useLogin } from "./useLogin"
 
 import Footer from "../../component/Footer"
 import Spinner from "../../component/Spinner";
+import Modal from "../../component/Modal";
+import ResetPasswordForm from "./ResetPasswordForm";
 
 function Login() {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<{ email: string; password: string }>()
@@ -72,6 +74,16 @@ function Login() {
                             LOGIN
                         </button>
                     </form>
+                    <Modal>
+                        <Modal.Open opens="resetPassword">
+                            <button>
+                                Forget Your Password?
+                            </button>
+                        </Modal.Open>
+                        <Modal.Window name="resetPassword">
+                            <ResetPasswordForm />
+                        </Modal.Window>
+                    </Modal>
                 </div>
             </div>
             <Footer />
