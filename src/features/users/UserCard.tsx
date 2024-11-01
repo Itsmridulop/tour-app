@@ -1,31 +1,18 @@
 import { FaTrash } from "react-icons/fa";
 import { UserDataType } from "../../types/userType"
 import { useDeleteUser } from "./useDeleteUser";
-
-const roleColor = (role: string) => {
-    switch (role) {
-        case "admin":
-            return "bg-blue-100 text-blue-700";
-        case "user":
-            return "bg-gray-100 text-gray-700";
-        case "guide":
-            return "bg-green-100 text-green-700";
-        case "lead-guide":
-            return "bg-purple-100 text-purple-700";
-        default:
-            return "bg-gray-100 text-gray-700";
-    }
-};
-
+import { useNavigate } from "react-router-dom";
+import { roleColor } from '../../utils/roleColor'
 
 function UserCard({ user }: { user: UserDataType }) {
     const { deleteUser, isPending } = useDeleteUser()
+    const navigate = useNavigate()
 
     return (
-        <div className="bg-white shadow-md rounded-lg p-4">
+        <div className="bg-white shadow-md rounded-lg p-4 transform transition duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer" onClick={() => navigate(`user/${user._id}`)}>
             <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
-                    <img src={`/src/public/img/users/${user.photo}`} alt={user.name} className="w-full h-full object-cover" />
+                    <img src={`/src/public/img/users/${user.photo ?? 'default.jpg'}`} alt={user.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold">{user.name}</h2>
@@ -37,7 +24,7 @@ function UserCard({ user }: { user: UserDataType }) {
                     {user.role}
                 </span>
                 <button
-                    onClick={() => deleteUser(user._id)}
+                    onClick={() => deleteUser(`${user._id}`)}
                     disabled={isPending}
                     className={`text-${isPending ? 'gray' : 'red'}-500 hover:bg-red-100 p-2 rounded-full transition`}
                 >

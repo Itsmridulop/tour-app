@@ -22,7 +22,7 @@ function Users() {
 
                 <div className="relative w-32 h-32 mb-4">
                     <img
-                        src={`src/public/img/users/${user?.data.photo}`}
+                        src={`src/public/img/users/${user?.data.photo ?? 'default.jpg'}`}
                         alt="Profile"
                         className="w-full h-full rounded-full object-cover shadow-md"
                     />

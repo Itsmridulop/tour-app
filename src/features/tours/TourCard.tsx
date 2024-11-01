@@ -8,7 +8,7 @@ function TourCard({ tour }: { tour: Tour }) {
   const formattedDate: string = dateObject.toLocaleDateString('en-US', options);
 
   return (
-    <div className="max-w-xs bg-white rounded-2xl shadow-lg overflow-hidden">
+    <div className="max-w-xs bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-xl">
       <div className="relative">
         <img
           src={`src/public/img/tours/${tour.imageCover}`}

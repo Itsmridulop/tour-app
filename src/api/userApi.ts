@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { auth } from "./authApi";
-import { CreateUserType, UserDataType } from "../types/userType";
+import { CreateUserType, ResponseType, UserDataType } from "../types/userType";
 
 class User {
     private api: AxiosInstance
@@ -14,9 +14,9 @@ class User {
         })
     }
 
-    public async getUsers(): Promise<{status: string; data:UserDataType; result: number}> {
+    public async getUsers(): Promise<{ status: string; data: UserDataType; result: number }> {
         try {
-            const response: AxiosResponse<{status: string; result: number; data: UserDataType}> =await this.api.get('/')
+            const response: AxiosResponse<{ status: string; result: number; data: UserDataType }> = await this.api.get('/')
             return response.data
         } catch (error) {
             console.error('Error in getting users: ', error)
@@ -34,11 +34,21 @@ class User {
         }
     }
 
-    public async deleteUser(id: number): Promise<void> {
+    public async deleteUser(id: string): Promise<void> {
         try {
             await this.api.delete(`/${id}`)
         } catch (error) {
             console.error('Error in deleting this user')
+            throw error
+        }
+    }
+
+    public async getOneUser(id: string): Promise<ResponseType> {
+        try {
+            const response: AxiosResponse<ResponseType> = await this.api.get(`/${id}`)
+            return response.data
+        } catch (error) {
+            console.error('Error in getting info of this user', error)
             throw error
         }
     }

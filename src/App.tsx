@@ -13,6 +13,7 @@ import Users from "./features/users/Users"
 import ForgotPasswordForm from "./features/authentication/ForgotPasswordForm"
 import AuthRoute from "./component/AuthRoute"
 import AllUsersList from "./features/users/AllUsersList"
+import UserData from "./features/users/UserData"
 
 const router = createBrowserRouter([
   {
@@ -45,7 +46,11 @@ const router = createBrowserRouter([
             path: '/allusers',
             element: <AuthRoute role={['admin']}>
               <AllUsersList/>
-            </AuthRoute>
+            </AuthRoute>,
+          },
+          {
+            path: 'allusers/user/:id',
+            element: <UserData/>
           }
         ]
       }
