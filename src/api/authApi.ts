@@ -104,7 +104,6 @@ class Authenication {
 
   public logout(): void {
     this.removeToken();
-    console.log("User logged out successfully");
   }
 
   public isAuthenticated(): boolean {

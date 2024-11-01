@@ -6,8 +6,7 @@ import UpdatePasswordForm from "./UpdatePasswordForm";
 import UpdateProfileForm from "./UpdateProfileForm";
 
 function Users() {
-    const { user, isLoading } = useUser();
-
+    const { user, isLoading } = useUser()
     if (isLoading) return <Spinner />;
 
     const role = user?.data.role;

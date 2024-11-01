@@ -8,8 +8,11 @@ export interface UserDataType {
 export interface ResponseType {
   status: string;
   token: string;
+  // result?: number;
   data: UserDataType;
 }
+
+
 
 export interface UserProfileType {
   name: string;
