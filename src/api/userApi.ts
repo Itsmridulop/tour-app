@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { auth } from "./authApi";
-import { UserDataType } from "../types/userType";
+import { CreateUserType, UserDataType } from "../types/userType";
 
 class User {
     private api: AxiosInstance
@@ -23,6 +23,18 @@ class User {
             throw error
         }
     }
+
+    public async createUser(userData: CreateUserType): Promise<ResponseType> {
+        try {
+            const response: AxiosResponse<ResponseType> = await this.api.post('/', userData)
+            return response.data
+        } catch (error) {
+            console.error('Error in creating this user: ', error)
+            throw error
+        }
+    }
+
+    public async deleteUser()
 }
 
 const user = new User()

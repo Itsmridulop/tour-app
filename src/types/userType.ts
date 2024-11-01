@@ -8,10 +8,23 @@ export interface UserDataType {
 export interface ResponseType {
   status: string;
   token: string;
-  // result?: number;
   data: UserDataType;
 }
 
+interface PhotoType {
+  [key: number]: {
+    name: string
+  };
+}
+
+export interface CreateUserType {
+  name: string;
+  role: string;
+  password: string;
+  confirmPassword: string;
+  photo?: PhotoType | string;
+  email: string
+}
 
 
 export interface UserProfileType {
