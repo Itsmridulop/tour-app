@@ -14,10 +14,10 @@ export default function UserList() {
     <div className="min-h-screen flex mt-18 flex-col bg-gray-100">
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-14 px-6">
-          <h1 className="text-2xl w-screen font-semibold text-center">User List</h1>
+          <h1 className="text-3xl w-screen font-semibold text-center">User List</h1>
           <Modal>
             <Modal.Open opens="createUser">
-              <button className="ml-auto bg-blue-500 text-white px-4 py-2 rounded w-48 hover:bg-blue-600 transition">
+              <button className="bg-green-500 text-white px-4 py-2 rounded w-60 hover:bg-green-600 transition">
                 Create New User
               </button>
             </Modal.Open>

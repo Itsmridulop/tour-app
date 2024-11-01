@@ -34,7 +34,14 @@ class User {
         }
     }
 
-    public async deleteUser()
+    public async deleteUser(id: number): Promise<void> {
+        try {
+            await this.api.delete(`/${id}`)
+        } catch (error) {
+            console.error('Error in deleting this user')
+            throw error
+        }
+    }
 }
 
 const user = new User()

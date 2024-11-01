@@ -4,7 +4,7 @@ import { CreateUserType } from "../../types/userType";
 
 function CreateNewUserForm({onClose}: {onClose?: () => void}) {
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm<CreateUserType>()
-    const { createUser } = useCreateUser()
+    const { createUser, isPending } = useCreateUser()
 
     const submitHandler = (data: CreateUserType) => {
         let photoName: string | undefined;
@@ -128,8 +128,9 @@ function CreateNewUserForm({onClose}: {onClose?: () => void}) {
                 <button
                     type="submit"
                     className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition"
+                    disabled={isPending}
                 >
-                    Create User
+                    {isPending ? 'Creating New User...' : 'Create User'}
                 </button>
             </form>
         </div>

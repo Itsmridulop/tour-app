@@ -25,7 +25,7 @@ function UpdatePasswordForm({ onClose }: { onClose?: () => void }) {
                         type="password"
                         id="password"
                         placeholder="Enter current password"
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
                         {...register('password', {
                             required: 'This feild is required',
                             minLength: {
@@ -44,7 +44,7 @@ function UpdatePasswordForm({ onClose }: { onClose?: () => void }) {
                         type="password"
                         id="newPassword"
                         placeholder="Enter new password"
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
                         {...register('newPassword', {
                             required: 'This feild is required',
                             minLength: {
@@ -63,7 +63,7 @@ function UpdatePasswordForm({ onClose }: { onClose?: () => void }) {
                         type="password"
                         id="newPasswordConfirm"
                         placeholder="Confirm new password"
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300"
                         {...register('newPasswordConfirm', {
                             required: 'This feild is required',
                             minLength: {
@@ -78,7 +78,7 @@ function UpdatePasswordForm({ onClose }: { onClose?: () => void }) {
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white font-semibold p-3 rounded-lg hover:bg-blue-600 transition duration-200 shadow-md focus:ring-2 focus:ring-blue-300"
+                    className="w-full bg-green-500 text-white font-semibold p-3 rounded-lg hover:bg-green-600 transition duration-200 shadow-md focus:ring-2 focus:ring-green-300"
                 >
                     Update Password
                 </button>

@@ -1,5 +1,6 @@
 import { FaTrash } from "react-icons/fa";
 import { UserDataType } from "../../types/userType"
+import { useDeleteUser } from "./useDeleteUser";
 
 const roleColor = (role: string) => {
     switch (role) {
@@ -18,6 +19,8 @@ const roleColor = (role: string) => {
 
 
 function UserCard({ user }: { user: UserDataType }) {
+    const { deleteUser, isPending } = useDeleteUser()
+
     return (
         <div className="bg-white shadow-md rounded-lg p-4">
             <div className="flex items-center gap-4">
@@ -34,8 +37,9 @@ function UserCard({ user }: { user: UserDataType }) {
                     {user.role}
                 </span>
                 <button
-                    // onClick={() => handleDelete(user.id)}
-                    className="text-red-500 hover:bg-red-100 p-2 rounded-full transition"
+                    onClick={() => deleteUser(user._id)}
+                    disabled={isPending}
+                    className={`text-${isPending ? 'gray' : 'red'}-500 hover:bg-red-100 p-2 rounded-full transition`}
                 >
                     <FaTrash className="h-5 w-5" />
                     <span className="sr-only">Delete user</span>

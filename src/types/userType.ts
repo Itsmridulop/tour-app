@@ -1,4 +1,5 @@
 export interface UserDataType {
+  _id: number;
   name: string;
   email: string;
   photo: string;

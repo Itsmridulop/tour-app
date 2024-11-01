@@ -27,7 +27,7 @@ function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; 
                         id="name"
                         defaultValue={user?.name}
                         placeholder="Enter your name"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200"
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-green-200"
                         {...register('name')}
                     />
                 </div>
@@ -39,14 +39,14 @@ function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; 
                     <input
                         type="file"
                         id="profilePhoto"
-                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200"
+                        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-green-200"
                         {...register('photo')}
                     />
                     {errors?.photo?.message && <div>{errors.photo.message}</div>}
                 </div>
                 <button
                     type="submit"
-                    className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
+                    className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-200"
                 >
                     Update Profile
                 </button>
