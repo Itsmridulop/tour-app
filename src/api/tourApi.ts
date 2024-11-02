@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { TourResponse } from "../types/tourTypes";
+import type { TourResponse, TourResponseType } from "../types/tourTypes";
+import { auth } from "./authApi";
 
 class Tour {
     private api: AxiosInstance
@@ -21,7 +22,20 @@ class Tour {
             console.error(error)
             throw error
         }
+    }
 
+    public async getOneTour(id: string): Promise<TourResponseType> {
+        try {
+            const response: AxiosResponse<TourResponseType> = await this.api.get(`/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in getting info of this tour', error)
+            throw error
+        }
     }
 }
 

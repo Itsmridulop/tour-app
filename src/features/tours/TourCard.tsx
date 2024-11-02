@@ -1,14 +1,15 @@
-import { Tour } from "../../types/tourTypes";
+import { useNavigate } from "react-router-dom";
+import { TourType } from "../../types/tourTypes";
 
-function TourCard({ tour }: { tour: Tour }) {
-
+function TourCard({ tour }: { tour: TourType }) {
+  const navigate = useNavigate()
   const dateString: string = tour.startDates[0];
   const dateObject: Date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long' };
   const formattedDate: string = dateObject.toLocaleDateString('en-US', options);
 
   return (
-    <div className="max-w-xs bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-xl">
+    <div className="max-w-xs bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-xl" >
       <div className="relative">
         <img
           src={`src/public/img/tours/${tour.imageCover}`}
@@ -31,7 +32,7 @@ function TourCard({ tour }: { tour: Tour }) {
           <div className="flex items-center">
             <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
             </svg>
-            <span className="text-xs text-gray-600">{tour.startLocation.description}</span>
+            <span className="text-xs text-gray-600">{tour.startLocation?.description}</span>
           </div>
           <div className="flex items-center">
             <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -60,7 +61,7 @@ function TourCard({ tour }: { tour: Tour }) {
           <span>${tour.price} per person</span>
           <span>{tour.ratingsAverage} rating ({tour.ratingsQuantity})</span>
         </div>
-        <button className="w-full mt-4 py-2 text-green-500 font-semibold border border-green-500 rounded-full hover:bg-green-500 hover:text-white">
+        <button className="w-full mt-4 py-2 text-green-500 font-semibold border border-green-500 rounded-full hover:bg-green-500 hover:text-white " onClick={() => navigate(`/tour/${tour._id}`)}>
           DETAILS
         </button>
       </div>
