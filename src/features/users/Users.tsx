@@ -1,4 +1,6 @@
 import { useUser } from "./useUser";
+import { FaTrash } from "react-icons/fa";
+import { useDeleteMe } from "./useDeleteMe";
 
 import Spinner from "../../component/Spinner";
 import Modal from "../../component/Modal";
@@ -7,6 +9,8 @@ import UpdateProfileForm from "./UpdateProfileForm";
 
 function Users() {
     const { user, isLoading } = useUser()
+    const { deleteMe, isPending } = useDeleteMe()
+
     if (isLoading) return <Spinner />;
 
     const role = user?.data.role;
@@ -58,6 +62,10 @@ function Users() {
                         </Modal.Window>
                     </Modal>
                 </div>
+                <button className={`mt-4  flex justify-center items-center space-x-3 px-20 py-2 bg-red-500 text-white rounded-md shadow hover:bg-${isPending ? 'gray' : 'red'}-600 transition`} disabled={isPending} onClick={() => deleteMe()}>
+                    <FaTrash />
+                    <span>Delete Account</span>
+                </button>
             </main>
         </div>
     );

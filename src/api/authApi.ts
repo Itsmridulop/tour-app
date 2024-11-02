@@ -27,6 +27,7 @@ class Authenication {
   public async login(userData: { email: string; password: string }): Promise<ResponseType> {
     try {
       const response: AxiosResponse<ResponseType> = await this.api.post("/login", userData);
+      this.removeToken()
       this.saveToken(response.data.token);
       return response.data;
     } catch (error) {
@@ -103,7 +104,6 @@ class Authenication {
   }
 
   public logout(): void {
-    console.log('logout')
     this.removeToken();
   }
 
@@ -112,7 +112,6 @@ class Authenication {
   }
 
   public saveToken(token: string): void {
-    console.log('remove token')
     localStorage.setItem("authToken", token);
   }
 

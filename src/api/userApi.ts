@@ -9,14 +9,17 @@ class User {
             baseURL: "http://localhost:8080/api/v1/users",
             headers: {
                 'Content-Type': 'Application/json',
-                'Authorization': `Bearer ${auth.gettoken()}`
             }
         })
     }
 
     public async getUsers(): Promise<{ status: string; data: UserDataType; result: number }> {
         try {
-            const response: AxiosResponse<{ status: string; result: number; data: UserDataType }> = await this.api.get('/')
+            const response: AxiosResponse<{ status: string; result: number; data: UserDataType }> = await this.api.get('/', {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
             return response.data
         } catch (error) {
             console.error('Error in getting users: ', error)
@@ -26,7 +29,11 @@ class User {
 
     public async createUser(userData: CreateUserType): Promise<ResponseType> {
         try {
-            const response: AxiosResponse<ResponseType> = await this.api.post('/', userData)
+            const response: AxiosResponse<ResponseType> = await this.api.post('/', userData, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
             return response.data
         } catch (error) {
             console.error('Error in creating this user: ', error)
@@ -36,7 +43,11 @@ class User {
 
     public async deleteUser(id: string): Promise<void> {
         try {
-            await this.api.delete(`/${id}`)
+            await this.api.delete(`/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
         } catch (error) {
             console.error('Error in deleting this user')
             throw error
@@ -45,10 +56,27 @@ class User {
 
     public async getOneUser(id: string): Promise<ResponseType> {
         try {
-            const response: AxiosResponse<ResponseType> = await this.api.get(`/${id}`)
+            const response: AxiosResponse<ResponseType> = await this.api.get(`/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
             return response.data
         } catch (error) {
             console.error('Error in getting info of this user', error)
+            throw error
+        }
+    }
+
+    public async deleteMe(): Promise<void> {
+        try {
+            await this.api.delete('/deleteMe', {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+        } catch (error) {
+            console.error('Error in delete your account', error)
             throw error
         }
     }
