@@ -1,29 +1,18 @@
 import { useForm } from "react-hook-form"
 import { useCreateUser } from "./useCreateUser";
 import { CreateUserType } from "../../types/userType";
+import { parsePhoto } from "../../utils/parsePhoto";
 
 function CreateNewUserForm({onClose}: {onClose?: () => void}) {
     const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm<CreateUserType>()
     const { createUser, isPending } = useCreateUser()
 
     const submitHandler = (data: CreateUserType) => {
-        let photoName: string | undefined;
-
-        if (typeof data.photo === 'object' && data.photo !== null) {
-            for (const key in data.photo) {
-                if (Object.hasOwn(data.photo, key)) {
-                    const photo = data.photo[key];
-                    photoName = photo?.name; 
-                    break; 
-                }
-            }
-        }
-    
+        const photoName = parsePhoto(data)
         const creatUserObj = {
             ...data,
             photo: photoName 
         }
-    
         createUser (creatUserObj, {
             onSettled: () => reset(),
             onSuccess: () => onClose?.()

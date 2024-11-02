@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { ResponseType, UserPasswordType, UserProfileType } from "../types/userType";
+import { CreateUserType, ResponseType, UserPasswordType } from "../types/userType";
 
 class Authenication {
   private api: AxiosInstance;
@@ -50,7 +50,7 @@ class Authenication {
     }
   }
 
-  public async updateProfile(userData: Partial<UserProfileType>): Promise<ResponseType> {
+  public async updateProfile(userData: Partial<CreateUserType>): Promise<ResponseType> {
     try {
       const response: AxiosResponse<ResponseType> = await this.api.patch('/updateMe', userData, {
         headers: {

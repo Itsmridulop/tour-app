@@ -80,6 +80,20 @@ class User {
             throw error
         }
     }
+
+    public async updateUser({ userData, id }: { userData: Partial<CreateUserType>, id?: string }): Promise<ResponseType> {
+        try {
+            const response: AxiosResponse<ResponseType> = await this.api.patch(`/${id}`, userData, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in updating this user', error)
+            throw error
+        }
+    }
 }
 
 const user = new User()

@@ -13,7 +13,7 @@ export interface ResponseType {
   data: UserDataType;
 }
 
-interface PhotoType {
+export interface PhotoType {
   [key: number]: {
     name: string
   };
@@ -26,12 +26,6 @@ export interface CreateUserType {
   confirmPassword: string;
   photo?: PhotoType | string;
   email: string
-}
-
-
-export interface UserProfileType {
-  name: string;
-  photo: string;
 }
 
 export interface UserPasswordType {
