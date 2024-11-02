@@ -1,4 +1,7 @@
-export interface Tour {
+import { ReviewType } from "./ReviewType";
+import { UserDataType } from "./userType";
+
+export interface TourType {
     startLocation: {
         type: string;
         coordinates: [number, number];
@@ -27,18 +30,20 @@ export interface Tour {
         _id: string;
         id: string;
     }>;
-    guides: [{
-        name: string;
-        photo: string;
-        email: string
-    }] | [string] | undefined;
+    guides: UserDataType[] | undefined;
     slug: string;
+    reviews: ReviewType[];
     durationWeek: number;
     id: string;
+}
+
+export interface TourResponseType {
+    status: string;
+    data: TourType;
 }
 
 export interface TourResponse {
     status: string;
     results: number;
-    data: Tour[];
+    data: TourType[];
 }
