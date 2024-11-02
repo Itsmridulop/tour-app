@@ -4,6 +4,7 @@ export interface UserDataType {
   email: string;
   photo: string;
   role: string;
+  active: boolean
 }
 
 export interface ResponseType {

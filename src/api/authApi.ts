@@ -103,6 +103,7 @@ class Authenication {
   }
 
   public logout(): void {
+    console.log('logout')
     this.removeToken();
   }
 
@@ -111,6 +112,7 @@ class Authenication {
   }
 
   public saveToken(token: string): void {
+    console.log('remove token')
     localStorage.setItem("authToken", token);
   }
 

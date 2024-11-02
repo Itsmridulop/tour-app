@@ -11,7 +11,7 @@ export default function UserList() {
   if (isPending) return <Spinner />
 
   return (
-    <div className="min-h-screen flex mt-18 flex-col bg-gray-100">
+    <div className="min-h-full flex mt-18 flex-col bg-gray-100">
       <div className="container mx-auto">
         <div className="flex justify-center items-center h-14 px-6">
           <h1 className="text-3xl w-screen font-semibold text-center">User List</h1>

@@ -41,7 +41,7 @@ function Users() {
                 <div className="flex space-x-4">
                     <Modal>
                         <Modal.Open opens='updateProfile'>
-                            <button className="px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-blue-600 transition">
+                            <button className="px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition">
                                 Update Profile
                             </button>
                         </Modal.Open>

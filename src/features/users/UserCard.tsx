@@ -8,6 +8,8 @@ function UserCard({ user }: { user: UserDataType }) {
     const { deleteUser, isPending } = useDeleteUser()
     const navigate = useNavigate()
 
+    if(!user.active) return null
+    
     return (
         <div className="bg-white shadow-md rounded-lg p-4 transform transition duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer" onClick={() => navigate(`user/${user._id}`)}>
             <div className="flex items-center gap-4">

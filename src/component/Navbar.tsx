@@ -32,15 +32,11 @@ function Navbar() {
             LOG IN
           </Link>
         }
-        <Link
-          to="/signup"
-          className="border border-white rounded-full py-2 px-6 hover:bg-white hover:text-gray-800 transition duration-300"
-        >
-          {auth.isAuthenticated() ?
-            <button onClick={() => logout()}>
-              LOG OUT
-            </button> : 'SIGN UP'}
-        </Link>
+        {
+          !auth.isAuthenticated() ?
+            <Link to='/signup' className="border border-white rounded-full py-2 px-6 hover:bg-white hover:text-gray-800 transition duration-300">SIGN UP</Link> :
+            <button className="border border-white rounded-full py-2 px-6 hover:bg-white hover:text-gray-800 transition duration-300" onClick={() => logout()}>LOG OUT</button>
+        }
         <Link to='/users' className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition">
           <CiUser className="text-2xl" />
         </Link>
