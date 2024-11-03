@@ -1,5 +1,6 @@
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaStar, FaDollarSign, FaMountain, FaPaperPlane, FaEdit, FaTrash } from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { useDeleteTour } from "./useDeleteTour";
 import { useTour } from "./useTour";
 import { useParams } from "react-router-dom";
 import { ReviewType } from "../../types/ReviewType";
@@ -28,6 +29,7 @@ const customMarkerIcon = new L.Icon({
 export default function TourData() {
     const { id } = useParams()
     const { tourData, isLoading } = useTour(id || "")
+    const { deleteTour, isPending } = useDeleteTour()
 
     if (isLoading) return <Spinner />
 
@@ -180,7 +182,7 @@ export default function TourData() {
                                 <FaEdit className="mr-2" />
                                 Edit Tour
                             </button>
-                            <button className="flex items-center bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition transform hover:scale-105">
+                            <button className={`flex items-center bg-${isPending ? 'gray' : 'red'}-600 text-white font-bold py-2 px-4 rounded hover:bg-${isPending ? 'gray' : 'red'}-800 transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
                                 <FaTrash className="mr-2" />
                                 Delete Tour
                             </button>

@@ -37,6 +37,19 @@ class Tour {
             throw error
         }
     }
+
+    public async deleteTour(id: string): Promise<void> {
+        try {
+            await this.api.delete(`/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+        } catch (error) {
+            console.error('Error in deleting this tour', error)
+            throw error
+        }
+    }
 }
 
 const tour = new Tour()
