@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query"
 import { tour } from "../../api/tourApi"
 
-const useTours = () => {
+const useTours = (queryStr: string) => {
     const { data: tours, isLoading, isError } = useQuery({
-        queryKey: ['tours'],
-        queryFn: () => tour.getAllTours()
+        queryKey: ['tours', queryStr],
+        queryFn: () => tour.getAllTours(queryStr)
     })
     return { tours, isLoading, isError }
 }

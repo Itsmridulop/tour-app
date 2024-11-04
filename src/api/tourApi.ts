@@ -14,9 +14,9 @@ class Tour {
         });
     }
 
-    public async getAllTours(): Promise<TourResponse> {
+    public async getAllTours(queryStr: string): Promise<TourResponse> {
         try {
-            const response: AxiosResponse<TourResponse> = await this.api.get("/");
+            const response: AxiosResponse<TourResponse> = await this.api.get(`/?${queryStr}`);
             return response.data
         } catch (error) {
             console.error(error)
