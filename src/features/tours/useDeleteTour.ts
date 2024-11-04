@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { tour } from "../../api/tourApi"
-import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
+
+import toast from "react-hot-toast"
 
 export const useDeleteTour = () => {
     const navigate = useNavigate()

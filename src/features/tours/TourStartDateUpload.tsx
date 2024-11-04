@@ -26,7 +26,7 @@ const TourStartDatesUpload: React.FC<TourStartDatesUploadProps> = ({ control, st
     };
 
     const handleAddDate = () => {
-        setStartDatesArr([...(startDatesArr || []), ""]);
+        setStartDatesArr([...(startDatesArr || []), new Date(Date.now()).toISOString().split('T')[0]]);
     };
 
     return (

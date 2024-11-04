@@ -64,6 +64,20 @@ class Tour {
             throw error
         }
     }
+
+    public async createTour(tourData: CreateTourType): Promise<TourResponse> {
+        try {
+            const response: AxiosResponse<TourResponse> = await this.api.post('/', tourData, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in creating new tour', error)
+            throw error
+        }
+    }
 }
 
 const tour = new Tour()

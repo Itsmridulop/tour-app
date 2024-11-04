@@ -65,29 +65,33 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
             if (typeof image === 'string') return image;
             else return image.name;
         });
+        const parsedCoverImage = typeof data.imageCover === 'string' ? data.imageCover : data.imageCover.name
         setIsLoading(true)
-        const locationObj = await Promise.all((tour?.locations || []).map(async location => {
+        const locationObj = await Promise.all((data?.locations || []).map(async location => {
             const coord = await fetchLocation(location.description);
             return {
                 ...location,
+                type: 'Point',
                 coordinates: coord
             };
         }));
-        
-        const startLocationCoord = await fetchLocation(tour?.startLocation.address)
 
-        
+        const startLocationCoord = await fetchLocation(data?.startLocation.address)
+
+
         const startLocaationObj: {
             type?: string;
             coordinates?: [number, number];
             address?: string;
             description?: string;
         } = {
-            ...tour?.startLocation,
+            ...data?.startLocation,
             coordinates: startLocationCoord
         }
+
         const tourData: CreateTourType = {
             ...data,
+            imageCover: parsedCoverImage,
             discount: data.discount && data.discount * 1,
             images: [...parsedImageObj || []],
             locations: [...locationObj || []],
@@ -216,7 +220,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                                                         }}
                                                         render={({ field }) => (
                                                             <select onChange={(e) => field.onChange(e.target.value)} value={field.value} className="border border-gray-300 rounded-md p-2 transition duration-200 ease-in-out focus:outline-none focus:ring-1 focus:ring-black bg-white hover:bg-gray-100">
-                                                                <option value="" disabled>Select difficulty</option>
+                                                                <option value="" selected>Select difficulty</option>
                                                                 <option value="easy">Easy</option>
                                                                 <option value="medium">Medium</option>
                                                                 <option value="difficult">Difficult</option>
@@ -257,7 +261,6 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                                                         control={control}
                                                         rules={{
                                                             validate: {
-                                                                required: value => value !== undefined || 'Discount is required',
                                                                 isLessThanPrice: value => (value && value < price) || 'Discount must be lesser than actual price.'
                                                             },
                                                         }}
@@ -369,11 +372,11 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                                                 />
                                                 {errors.imageCover && <p className="text-red-500">{errors.imageCover.message}</p>}
                                             </div>
-                                            {tour?.images && <TourImagesUpload control={control} imagesArr={images} setter={setImages} />}
+                                            <TourImagesUpload control={control} imagesArr={images} setter={setImages} />
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="dates" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center h-full">
-                                        {tour?.startDates && <TourStartDatesUpload control={control} startDatesArr={startDate} setStartDatesArr={setStartDate} />}
+                                        <TourStartDatesUpload control={control} startDatesArr={startDate} setStartDatesArr={setStartDate} />
                                     </TabsContent>
                                     <TabsContent value="locations" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center">
                                         <div className="space-y-6 w-full">
@@ -519,7 +522,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                     </Tabs>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                    <Button type="submit" className="bg-green-500 hover:bg-green-600" disabled={isLoading}>{ isLoading ? 'Verifing Data...' : 'Save Changes'}</Button>
+                    <Button type="submit" className="bg-green-500 hover:bg-green-600" disabled={isLoading}>{isLoading ? 'Verifing Data...' : 'Save Changes'}</Button>
                 </CardFooter>
             </Card>
         </form>
