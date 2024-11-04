@@ -5,6 +5,7 @@ import { useTour } from "./useTour";
 import { useParams } from "react-router-dom";
 import { ReviewType } from "../../types/ReviewType";
 import { UserDataType } from "../../types/userType";
+import { useUpdateTour } from "./useUpdateTour";
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -30,12 +31,13 @@ const customMarkerIcon = new L.Icon({
 
 export default function TourData() {
     const { id } = useParams()
+    const { updateTour, isPending: isUpdating } = useUpdateTour()
     const { tourData, isLoading } = useTour(id || "")
     const { deleteTour, isPending } = useDeleteTour()
 
-    if (isLoading) return <Spinner />
+    if (isLoading || isUpdating) return <Spinner />
 
-    const position: [number, number] = [tourData?.data.startLocation.coordinates[1] ?? 0, tourData?.data.startLocation.coordinates[0] ?? 0];
+    const position: [number, number] = [tourData?.data.startLocation.coordinates?.[1] ?? 0, tourData?.data.startLocation.coordinates?.[0] ?? 0];
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -118,7 +120,7 @@ export default function TourData() {
 
                     <Guides
                         guides={tourData?.data.guides}
-                        renderGuide={(guide: UserDataType ) => (
+                        renderGuide={(guide: UserDataType) => (
                             <>
                                 <img
                                     src={`/src/public/img/users/${guide.photo ?? 'default.jpg'}`}
@@ -188,7 +190,7 @@ export default function TourData() {
                                     </button>
                                 </Modal.Open>
                                 <Modal.Window name="updateTour">
-                                    <EditTourForm tour={tourData?.data} />
+                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: "/>
                                 </Modal.Window>
                             </Modal>
                             <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>

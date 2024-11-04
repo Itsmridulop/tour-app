@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import type { TourResponse, TourResponseType, TourType } from "../types/tourTypes";
+import type { CreateTourType, TourResponse, TourResponseType } from "../types/tourTypes";
 import { auth } from "./authApi";
 
 class Tour {
@@ -51,7 +51,7 @@ class Tour {
         }
     }
 
-    public async updateTour(tourData: TourType , id?: string): Promise<TourResponse> {
+    public async updateTour(tourData: CreateTourType , id?: string): Promise<TourResponse> {
         try {
             const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, tourData, {
                 headers: {

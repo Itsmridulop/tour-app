@@ -4,22 +4,19 @@ import { Label } from "../../component/Label"
 import { Input } from "../../component/Input"
 import { Button } from "../../component/Button"
 import { MinusCircledIcon, PlusCircledIcon } from '@radix-ui/react-icons'
-import { CreateTourType, TourType } from '@/types/tourTypes';
+import { CreateTourType } from '@/types/tourTypes';
 
 interface TourImagesUploadProps {
-    control: Control<CreateTourType | TourType>;
+    control: Control<CreateTourType>;
     imagesArr?: (File | string)[]; 
     setter: Dispatch<SetStateAction<(string | File)[] | undefined>>
 }
 
 const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr, setter }) => {
-    // const [images, setImages] = useState<(File | string)[]>(imagesArr || []);
-    // const [image] = useRef(imagesArr)
 
     const handleImageChange = (index: number, file: File | string) => {
         const updatedImages = [...imagesArr || []];
         updatedImages[index] = file;
-        console.log(updatedImages)
         setter(updatedImages);
     };
 
@@ -54,7 +51,7 @@ const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr,
                                         }}
                                         className="border rounded-md p-2"
                                     />
-                                    {/* {console.log(image.length)} */}
+
                                     {image && typeof image === 'string' && image.length > 0 && (
                                         <img
                                             src={`/src/public/img/tours/${image}`}

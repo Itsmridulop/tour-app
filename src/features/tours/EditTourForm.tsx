@@ -8,59 +8,75 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../component/Tabs"
 import { ScrollArea } from "../../component/ScrollArea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../component/Accordion"
-import { CreateTourType, TourType } from '@/types/tourTypes'
+import { CreateTourType, TourResponse, TourType } from '@/types/tourTypes'
 import { MinusCircledIcon, PlusCircledIcon } from '@radix-ui/react-icons'
-import { useState } from 'react'
-import { useUpdateTour } from './useUpdateTour'
+import { FC, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { fetchLocation } from '@/utils/fetchLocation'
+import { useAlert } from '@/component/Alert'
+import { UseMutateFunction } from '@tanstack/react-query'
 
 import TourImagesUpload from './TourImageUploader'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import TourStartDatesUpload from './TourStartDateUpload'
 
-export default function TourEditForm({ tour, onClose }: { tour?: TourType; onClose?: () => void }) {
+interface TourEditFormProps {
+    tour?: TourType;
+    updationFn: UseMutateFunction<TourResponse, Error, {
+        tourData: CreateTourType;
+        id?: string;
+    }, unknown>
+    onClose?: () => void;
+    title: string
+}
+
+const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title }) => {
     const [images, setImages] = useState<(string | File)[] | undefined>(tour?.images)
-    const { control, watch, reset, handleSubmit, register, formState: { errors } } = useForm<CreateTourType | TourType>({
-        defaultValues: tour
+    const [startDate, setStartDate] = useState<string[] | undefined>(tour?.startDates)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const { control, watch, reset, handleSubmit, register, formState: { errors } } = useForm<CreateTourType>({
+        defaultValues: {
+            ...tour,
+            guides: [""]
+        }
     })
+    const { showAlert } = useAlert()
     const { id } = useParams()
+
     const { fields: locationFields, append: appendLocation, remove: removeLocation } = useFieldArray({
         control,
         name: "locations"
     })
 
-    const { updateTour } = useUpdateTour()
-
-    const handleFetchLocation = async (address?: string) => {
-        const apiKey = 'a225fe80e865411cbcf7de42cc45d59f';
-        const url = `https://api.geoapify.com/v1/geocode/search?text=${address}&apiKey=${apiKey}`;
-
-        try {
-            const response = await axios.get(url);
-            return response.data.features[0].geometry.coordinates
-        } catch (error) {
-            console.log(error)
-        }
-    };
-
     const price = watch("price");
 
-    const onSubmit = async (data: CreateTourType | TourType) => {
-        onClose?.()
+    const onSubmit = async (data: CreateTourType) => {
+        if (data.locations?.length === 0) {
+            showAlert('Tour must have some locations to vistit')
+            return;
+        }
+
+        if (startDate?.length === 0) {
+            showAlert('Tour must have some start date')
+            return;
+        }
+
         const parsedImageObj = images?.map((image) => {
             if (typeof image === 'string') return image;
             else return image.name;
         });
-
-
+        setIsLoading(true)
         const locationObj = await Promise.all((tour?.locations || []).map(async location => {
-            const coord = await handleFetchLocation(location.description);
+            const coord = await fetchLocation(location.description);
             return {
                 ...location,
                 coordinates: coord
             };
         }));
+        
+        const startLocationCoord = await fetchLocation(tour?.startLocation.address)
 
-        const startLocationCoord = await handleFetchLocation(tour?.startLocation.address)
+        
         const startLocaationObj: {
             type?: string;
             coordinates?: [number, number];
@@ -70,25 +86,26 @@ export default function TourEditForm({ tour, onClose }: { tour?: TourType; onClo
             ...tour?.startLocation,
             coordinates: startLocationCoord
         }
-        const tourData: TourType = {
+        const tourData: CreateTourType = {
             ...data,
             discount: data.discount && data.discount * 1,
             images: [...parsedImageObj || []],
             locations: [...locationObj || []],
+            startDates: [...startDate || []],
             startLocation: { ...startLocaationObj }
         };
-        console.log(tourData)
-
-        updateTour({ tourData, id }, {
+        setIsLoading(false)
+        onClose?.()
+        updationFn({ tourData, id }, {
             onSettled: () => reset()
         });
-
     };
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="h-[49.49rem] w-[33.125rem] flex flex-col">
             <Card className="flex-grow flex flex-col border-transparent shadow-sm">
                 <CardHeader>
-                    <CardTitle>Edit Tour: <Controller name="name" control={control} render={({ field }) => <span>{field.value}</span>} /></CardTitle>
+                    <CardTitle>{title} <Controller name="name" control={control} render={({ field }) => <span>{field.value}</span>} /></CardTitle>
                     <CardDescription>Make changes to your tour information here. Click save when you're done.</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow overflow-hidden">
@@ -356,31 +373,7 @@ export default function TourEditForm({ tour, onClose }: { tour?: TourType; onClo
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="dates" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center h-full">
-                                        <div className="space-y-4 flex flex-col justify-evenly h-full w-full">
-                                            <Label className='text-xl'>Start Dates</Label>
-                                            <Controller
-                                                name="startDates"
-                                                control={control}
-                                                render={({ field }) => (
-                                                    <>
-                                                        {field.value.map((date, index) => (
-                                                            <Input
-                                                                key={index}
-                                                                type="date"
-                                                                value={new Date(date).toISOString().split('T')[0]}
-                                                                onChange={(e) => {
-                                                                    const newDates = [...field.value];
-                                                                    newDates[index] = new Date(e.target.value).toISOString();
-                                                                    field.onChange(newDates);
-                                                                }}
-                                                                className="mb-2"
-                                                                defaultValue={new Date(date).toISOString().split('T')[0]}
-                                                            />
-                                                        ))}
-                                                    </>
-                                                )}
-                                            />
-                                        </div>
+                                        {tour?.startDates && <TourStartDatesUpload control={control} startDatesArr={startDate} setStartDatesArr={setStartDate} />}
                                     </TabsContent>
                                     <TabsContent value="locations" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center">
                                         <div className="space-y-6 w-full">
@@ -526,84 +519,11 @@ export default function TourEditForm({ tour, onClose }: { tour?: TourType; onClo
                     </Tabs>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                    <Button type="submit" className="bg-green-500 hover:bg-green-600">Save Changes</Button>
+                    <Button type="submit" className="bg-green-500 hover:bg-green-600" disabled={isLoading}>{ isLoading ? 'Verifing Data...' : 'Save Changes'}</Button>
                 </CardFooter>
             </Card>
         </form>
     )
 }
 
-
-// {
-//     "startLocation": {
-//         "type": "Point",
-//         "coordinates": [
-//             -73.985141,
-//             40.75894
-//         ],
-//         "address": "Manhattan, NY 10036, USA",
-//         "description": "NYC, USA"
-//     },
-//     "_id": "67156aa8100a7b5a4a1617d5",
-//     "name": "The City Wanderer",
-//     "duration": 9,
-//     "maxGroupSize": 20,
-//     "difficulty": "easy",
-//     "ratingsAverage": 4.6,
-//     "ratingsQuantity": 5,
-//     "price": 1197,
-//     "summary": "Living the life of Wanderlust in the US' most beatiful cities",
-//     "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat lorem ipsum dolor sit amet.\nConsectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur, nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat!",
-//     "imageCover": "tour-4-cover.jpg",
-//     "images": [
-//         "tour-4-1.jpg",
-//         "tour-4-2.jpg",
-//         "tour-4-3.jpg"
-//     ],
-//     "startDates": [
-//         "2021-03-11T10:00:00.000Z",
-//         "2021-05-02T09:00:00.000Z",
-//         "2021-06-09T09:00:00.000Z"
-//     ],
-//     "secretTour": false,
-//     "locations": [
-//         {
-//             "type": "Point",
-//             "coordinates": [
-//                 -73.967696,
-//                 40.781821
-//             ],
-//             "description": "New York",
-//             "day": 1,
-//             "_id": "67156aa8100a7b5a4a1617d6",
-//             "id": "67156aa8100a7b5a4a1617d6"
-//         },
-//         {
-//             "type": "Point",
-//             "coordinates": [
-//                 -118.324396,
-//                 34.097984
-//             ],
-//             "description": "Los Angeles",
-//             "day": 3,
-//             "_id": "67156aa8100a7b5a4a1617d7",
-//             "id": "67156aa8100a7b5a4a1617d7"
-//         },
-//         {
-//             "type": "Point",
-//             "coordinates": [
-//                 -122.408865,
-//                 37.787825
-//             ],
-//             "description": "San Francisco",
-//             "day": 5,
-//             "_id": "67156aa8100a7b5a4a1617d8",
-//             "id": "67156aa8100a7b5a4a1617d8"
-//         }
-//     ],
-//     "guides": [],
-//     "slug": "the-city-wanderer",
-//     "durationWeek": 1.2857142857142858,
-//     "reviews": [],
-//     "id": "67156aa8100a7b5a4a1617d5"
-// }
+export default TourEditForm

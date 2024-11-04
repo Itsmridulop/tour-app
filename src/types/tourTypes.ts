@@ -3,10 +3,10 @@ import { UserDataType } from "./userType";
 
 export interface TourType {
     startLocation: {
-        type?: string;
-        coordinates?: [number, number];
-        address?: string;
-        description?: string;
+        type: string;
+        coordinates: [number, number];
+        address: string;
+        description: string;
     };
     _id: string;
     name: string;
@@ -30,7 +30,7 @@ export interface TourType {
         _id?: string;
         id?: string;
     }>;
-    guides?: UserDataType[] | string[];
+    guides?: UserDataType[];
     slug: string;
     discount?: number;
     reviews: ReviewType[];
@@ -40,10 +40,10 @@ export interface TourType {
 
 export interface CreateTourType {
     startLocation: {
-        type: string;
+        type?: string;
         coordinates?: [number, number];
-        address: string;
-        description: string;
+        address?: string;
+        description?: string;
     };
     _id: string;
     name: string;
@@ -56,7 +56,7 @@ export interface CreateTourType {
     summary: string;
     description: string;
     imageCover: string;
-    images: File[];
+    images?: File[] | string[];
     startDates: string[];
     secretTour: boolean;
     locations: Array<{
