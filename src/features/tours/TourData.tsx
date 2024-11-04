@@ -12,6 +12,8 @@ import Spinner from "../../component/Spinner";
 import Images from "./Images";
 import Guides from "./Guides";
 import Reviews from "./Reviews";
+import Modal from "@/component/Modal";
+import EditTourForm from "./EditTourForm";
 
 L.Icon.Default.mergeOptions({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -116,7 +118,7 @@ export default function TourData() {
 
                     <Guides
                         guides={tourData?.data.guides}
-                        renderGuide={(guide: UserDataType) => (
+                        renderGuide={(guide: UserDataType ) => (
                             <>
                                 <img
                                     src={`/src/public/img/users/${guide.photo ?? 'default.jpg'}`}
@@ -178,17 +180,23 @@ export default function TourData() {
                                 <FaPaperPlane className="mr-2" />
                                 Book Now
                             </button>
-                            <button className="flex items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
-                                <FaEdit className="mr-2" />
-                                Edit Tour
-                            </button>
-                            <button className={`flex items-center bg-${isPending ? 'gray' : 'red'}-600 text-white font-bold py-2 px-4 rounded hover:bg-${isPending ? 'gray' : 'red'}-800 transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
+                            <Modal>
+                                <Modal.Open opens="updateTour">
+                                    <button className="flex items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
+                                        <FaEdit className="mr-2" />
+                                        Edit Tour
+                                    </button>
+                                </Modal.Open>
+                                <Modal.Window name="updateTour">
+                                    <EditTourForm tour={tourData?.data} />
+                                </Modal.Window>
+                            </Modal>
+                            <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
                                 <FaTrash className="mr-2" />
                                 Delete Tour
                             </button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

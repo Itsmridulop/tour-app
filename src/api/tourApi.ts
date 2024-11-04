@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import type { TourResponse, TourResponseType } from "../types/tourTypes";
+import type { TourResponse, TourResponseType, TourType } from "../types/tourTypes";
 import { auth } from "./authApi";
 
 class Tour {
@@ -47,6 +47,20 @@ class Tour {
             })
         } catch (error) {
             console.error('Error in deleting this tour', error)
+            throw error
+        }
+    }
+
+    public async updateTour(tourData: TourType , id?: string): Promise<TourResponse> {
+        try {
+            const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, tourData, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in updating data of this tour', error)
             throw error
         }
     }
