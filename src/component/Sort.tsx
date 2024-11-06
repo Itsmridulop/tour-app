@@ -54,7 +54,7 @@ export default function Sort({ onSortChange, queryObj }: { onSortChange: (query:
                                     key={option.value}
                                     onSelect={() => {
                                         field.onChange(option.value)
-                                        handleSubmit(onSubmit)()  // Trigger form submission on selection
+                                        handleSubmit(onSubmit)()
                                     }}
                                     className="justify-between"
                                 >

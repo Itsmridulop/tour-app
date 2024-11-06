@@ -13,13 +13,14 @@ import Sort from "@/component/Sort";
 export interface QueryType {
     filterValue: string;
     filterField: string;
-    sortBy: string
+    sortBy: string;
+    best: boolean
 }
 
 function Tour() {
-    const [queryStr, setQueryStr] = useState<QueryType>({ filterField: "", filterValue: "", sortBy: "" });
+    const [queryStr, setQueryStr] = useState<QueryType>({ filterField: "", filterValue: "", sortBy: "", best: false });
 
-    const { tours, isLoading } = useTours((queryStr.filterField && queryStr.filterValue) || queryStr.sortBy ? `${queryStr.filterField}`+ (queryStr.filterField === 'difficulty' ? "" : '[lte]') + `=${queryStr.filterValue}&sort=${queryStr.sortBy}` : " ");
+    const { tours, isLoading } = useTours((queryStr.filterField && queryStr.filterValue) || queryStr.sortBy ? `${queryStr.filterField}` + (queryStr.filterField === 'difficulty' || queryStr.filterField === "" ? "" : '[lte]') + `=${queryStr.filterValue}&sort=${queryStr.sortBy}` : " ", queryStr.best);
     const { createTour } = useCreateTour();
 
     const handleFilterChange = (query: QueryType) => {
@@ -35,6 +36,15 @@ function Tour() {
     return (
         <div className="flex flex-col min-h-screen text-white">
             <div className="flex justify-between items-center w-full px-4 py-6 shadow-md space-x-4">
+                <button
+                    className="bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-700 transition-colors"
+                    onClick={() => setQueryStr({
+                        ...queryStr,
+                        best: !queryStr.best
+                    })}
+                >
+                    Best Tours
+                </button>
                 <Filter onFilterChange={handleFilterChange} queryObj={queryStr} />
                 <Sort onSortChange={handleSortChange} queryObj={queryStr} />
                 <Modal>

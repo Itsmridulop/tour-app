@@ -14,9 +14,11 @@ class Tour {
         });
     }
 
-    public async getAllTours(queryStr: string): Promise<TourResponse> {
+    public async getAllTours(queryStr: string, best: boolean): Promise<TourResponse> {
         try {
-            const response: AxiosResponse<TourResponse> = await this.api.get(`/?${queryStr}`);
+            let response: AxiosResponse<TourResponse>
+            if (!best) response = await this.api.get(`/?${queryStr}`);
+            else response = await this.api.get('/top-5-tours')
             return response.data
         } catch (error) {
             console.error(error)
@@ -51,7 +53,7 @@ class Tour {
         }
     }
 
-    public async updateTour(tourData: CreateTourType , id?: string): Promise<TourResponse> {
+    public async updateTour(tourData: CreateTourType, id?: string): Promise<TourResponse> {
         try {
             const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, tourData, {
                 headers: {

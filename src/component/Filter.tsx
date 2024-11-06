@@ -1,5 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/component/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/component/Select";
 import { Input } from "@/component/Input";
 import { Button } from "@/component/Button";
 import { QueryType } from '@/features/tours/Tour';
