@@ -85,3 +85,16 @@ export interface TourResponse {
     results: number;
     data: TourType[];
 }
+
+export interface Statstype {
+    status: string;
+    data: {
+        _id: string,
+        avgRating: number;
+        avgPrice: number;
+        minPrice: number;
+        maxPrice: number,
+        numRatings: number;
+        numTours: number;
+    }[]
+}

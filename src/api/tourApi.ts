@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import type { CreateTourType, TourResponse, TourResponseType } from "../types/tourTypes";
+import type { CreateTourType, Statstype, TourResponse, TourResponseType } from "../types/tourTypes";
 import { auth } from "./authApi";
 
 class Tour {
@@ -77,6 +77,20 @@ class Tour {
             return response.data
         } catch (error) {
             console.error('Error in creating new tour', error)
+            throw error
+        }
+    }
+
+    public async getStats(): Promise<Statstype> {
+        try {
+            const response: AxiosResponse<Statstype> = await this.api.get('/stats', {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in getting stats', error)
             throw error
         }
     }
