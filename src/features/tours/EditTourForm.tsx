@@ -67,16 +67,25 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
         });
         const parsedCoverImage = typeof data.imageCover === 'string' ? data.imageCover : data.imageCover.name
         setIsLoading(true)
-        const locationObj = await Promise.all((data?.locations || []).map(async location => {
-            const coord = await fetchLocation(location.description);
-            return {
-                ...location,
-                type: 'Point',
-                coordinates: coord
-            };
-        }));
-
-        const startLocationCoord = await fetchLocation(data?.startLocation.address)
+        let locationObj
+        try {
+            locationObj = await Promise.all((data?.locations || []).map(async location => {
+                const coord = await fetchLocation(location.description);
+                return {
+                    ...location,
+                    type: 'Point',
+                    coordinates: coord
+                };
+            }));
+        } catch {
+            showAlert('Error is getting corrdinates of some locations')
+        }
+        let startLocationCoord
+        try {
+            startLocationCoord = await fetchLocation(data?.startLocation.address)
+        } catch {
+            showAlert('Error in getting coordinates of start location')
+        }
 
 
         const startLocaationObj: {
@@ -268,7 +277,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                                                             <Input
                                                                 type="number"
                                                                 {...field}
-                                                                defaultValue={field.value}
+                                                                defaultValue={field.value ?? 0}
                                                                 min={0}
                                                             />
                                                         )}

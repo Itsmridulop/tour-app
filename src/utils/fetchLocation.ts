@@ -8,6 +8,7 @@ export const fetchLocation = async (address?: string) => {
         const response = await axios.get(url);
         return response.data.features[0].geometry.coordinates
     } catch (error) {
-        console.log(error)
+        console.error(error)
+        throw new Error('Error in fetching coordinates.')
     }
 };

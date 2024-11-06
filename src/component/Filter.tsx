@@ -2,13 +2,15 @@ import { useForm, Controller } from 'react-hook-form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/component/select";
 import { Input } from "@/component/Input";
 import { Button } from "@/component/Button";
+import { QueryType } from '@/features/tours/Tour';
+import { useAlert } from './Alert';
 
 type FilterFormValues = {
     selectedFilter: string;
     filterValue: string;
 };
 
-export default function Filter({ onFilterChange }: { onFilterChange: (query: string) => void }) {
+export default function Filter({ onFilterChange, queryObj }: { onFilterChange: (query: QueryType) => void; queryObj: QueryType }) {
     const { handleSubmit, control, watch, setValue } = useForm<FilterFormValues>({
         defaultValues: {
             selectedFilter: '',
@@ -16,13 +18,20 @@ export default function Filter({ onFilterChange }: { onFilterChange: (query: str
         },
     });
 
+    const {showAlert} = useAlert()
     const selectedFilter = watch("selectedFilter");
 
     const onSubmit = (data: FilterFormValues) => {
-        let queryStr;
-        if (data.selectedFilter === 'difficulty') queryStr = `${data.selectedFilter}=${data.filterValue}`;
-        else queryStr = `${data.selectedFilter}[lte]=${data.filterValue}`;
-        onFilterChange(queryStr);
+        if(parseInt(data.filterValue) > 5 && selectedFilter === 'ratingsAverage') {
+            showAlert('Rating must not be greater then 5')
+            return
+        }
+        const newQueryObj = {
+            ...queryObj,
+            filterValue: data.filterValue,
+            filterField: selectedFilter,
+        }
+        onFilterChange(newQueryObj);
     };
 
     const renderValueInput = () => {
@@ -53,6 +62,7 @@ export default function Filter({ onFilterChange }: { onFilterChange: (query: str
                     render={({ field }) => (
                         <Input
                             {...field}
+                            min={0}
                             type="number"
                             placeholder={`Enter ${selectedFilter}`}
                             className="w-full"

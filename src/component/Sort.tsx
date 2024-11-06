@@ -1,38 +1,71 @@
-import { useSearchParams } from "react-router-dom";
+import { ArrowUpDown, Check } from 'lucide-react'
+import { Button } from '@/component/Button'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/component/Dropdown-menu'
+import { useForm, Controller } from 'react-hook-form'
+import { QueryType } from '@/features/tours/Tour'
 
-interface SortOption {
-    label: string;
-    value: string;
+type SortOption = 'ratingsAverage' | 'price' | 'maxGroupSize' | 'duration'
+
+interface SortFormData {
+    sortBy: SortOption
 }
 
-interface SortByProps {
-    options: SortOption[];
-}
+export default function Sort({ onSortChange, queryObj }: { onSortChange: (query: QueryType) => void; queryObj: QueryType }) {
+    const { control, handleSubmit } = useForm<SortFormData>({
+        defaultValues: { sortBy: 'ratingsAverage' },
+    })
 
-const SortBy: React.FC<SortByProps> = ({ options }) => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const searchParamsObj = {
-        filter: searchParams.get("filter") || "",
-        sortBy: searchParams.get("sortBy") || "",
-    };
+    const sortOptions: { value: SortOption; label: string }[] = [
+        { value: 'ratingsAverage', label: 'Rating Average' },
+        { value: 'price', label: 'Price' },
+        { value: 'maxGroupSize', label: 'Max Group Size' },
+        { value: 'duration', label: 'Duration' },
+    ]
 
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSearchParams({ ...searchParamsObj, sortBy: e.target.value, page: "1" });
-    };
+    const onSubmit = (data: SortFormData) => {
+        const newQueryObj = {
+            ...queryObj,
+            sortBy: data.sortBy
+        }
+        onSortChange(newQueryObj)
+    }
 
     return (
-        <select
-            onChange={handleChange}
-            className="border border-gray-200 bg-gray-50 rounded-md p-2 text-gray-800"
-            defaultValue={searchParams.get("sortBy") || ""}
-        >
-            {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                    {option.label}
-                </option>
-            ))}
-        </select>
-    );
-};
-
-export default SortBy;
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Controller
+                name="sortBy"
+                control={control}
+                render={({ field }) => (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="w-[210px] justify-between">
+                                Sort by: {sortOptions.find(option => option.value === field.value)?.label}
+                                <ArrowUpDown className="ml-2 h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[210px]">
+                            {sortOptions.map((option) => (
+                                <DropdownMenuItem
+                                    key={option.value}
+                                    onSelect={() => {
+                                        field.onChange(option.value)
+                                        handleSubmit(onSubmit)()  // Trigger form submission on selection
+                                    }}
+                                    className="justify-between"
+                                >
+                                    {option.label}
+                                    {field.value === option.value && <Check className="h-4 w-4" />}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
+            />
+        </form>
+    )
+}
