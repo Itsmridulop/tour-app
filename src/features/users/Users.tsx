@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/component/Avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/component/Card"
 import { Button } from "@/component/Button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/component/Dialog"
-import {  FaEdit, FaTrashAlt, FaPlus, FaUserEdit, FaKey, FaUserTimes } from 'react-icons/fa'
+import { FaEdit, FaTrashAlt, FaPlus, FaUserEdit, FaKey, FaUserTimes } from 'react-icons/fa'
 import { useUser } from './useUser'
 import { useDeleteMe } from './useDeleteMe'
 import { useTours } from '../tours/useTours'
@@ -28,7 +28,7 @@ export default function Component() {
     const { deleteTour, isPending: isDeleting } = useDeleteTour()
     const { updateTour, isPending: isUpdating } = useUpdateTour()
 
-    
+
 
     if (isLoading || isTourLoading || isCreating || isDeleting || isUpdating) return <Spinner />
 
@@ -95,7 +95,7 @@ export default function Component() {
             {
                 user?.data.role === "admin" &&
                 <>
-                    <Stats/>
+                    <Stats />
 
                     <h2 className="text-xl font-semibold mb-4">Manage Tours</h2>
 

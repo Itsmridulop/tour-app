@@ -3,9 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useDeleteTour } from "./useDeleteTour";
 import { useTour } from "./useTour";
 import { useParams } from "react-router-dom";
-import { ReviewType } from "../../types/ReviewType";
-import { UserDataType } from "../../types/userType";
+import { ReviewType, TourReviewType } from "../../types/ReviewType";
+import { ResponseType, UserDataType } from "../../types/userType";
 import { useUpdateTour } from "./useUpdateTour";
+import { useQueryClient } from "@tanstack/react-query";
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -15,6 +16,8 @@ import Guides from "./Guides";
 import Reviews from "./Reviews";
 import Modal from "@/component/Modal";
 import EditTourForm from "./EditTourForm";
+import AddReviewForm from "../reviews/AddReviewForm";
+import { useState } from "react";
 
 L.Icon.Default.mergeOptions({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -30,10 +33,22 @@ const customMarkerIcon = new L.Icon({
 });
 
 export default function TourData() {
+    const queryClient = useQueryClient()
+    const user: ResponseType | undefined = queryClient.getQueryData(['user'])
+
     const { id } = useParams()
     const { updateTour, isPending: isUpdating } = useUpdateTour()
     const { tourData, isLoading } = useTour(id || "")
     const { deleteTour, isPending } = useDeleteTour()
+    const [review, setReview] = useState<(TourReviewType | ReviewType)[] | undefined>(tourData?.data.reviews ?? [])
+    console.log(review)
+
+    const handleReviewChange = (reviewData: ReviewType) => {
+        setReview([{
+            rating: reviewData.rating,
+            review: reviewData.review,
+        }])
+    }
 
     if (isLoading || isUpdating) return <Spinner />
 
@@ -134,22 +149,6 @@ export default function TourData() {
                             </>
                         )}
                     />
-
-                    <Reviews
-                        reviews={tourData?.data.reviews}
-                        renderReview={(review: ReviewType) => (
-                            <>
-                                <div className="flex items-center">
-                                    <FaStar className="text-yellow-500" />
-                                    <span className="font-bold ml-1">{review.rating}</span>
-                                </div>
-                                <p className="mt-2">{review.review}</p>
-                                <p className="text-sm text-gray-500 mt-1">
-                                    Reviewed on {new Date(review.createdAt ?? Date.now()).toLocaleDateString()}
-                                </p>
-                            </>
-                        )}
-                    />
                 </div>
 
                 <div className="flex flex-col items-start p-4">
@@ -182,7 +181,7 @@ export default function TourData() {
                                 <FaPaperPlane className="mr-2" />
                                 Book Now
                             </button>
-                            <Modal>
+                            {user?.data.role === 'admin' && <><Modal>
                                 <Modal.Open opens="updateTour">
                                     <button className="flex items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
                                         <FaEdit className="mr-2" />
@@ -190,17 +189,35 @@ export default function TourData() {
                                     </button>
                                 </Modal.Open>
                                 <Modal.Window name="updateTour">
-                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: "/>
+                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: " />
                                 </Modal.Window>
                             </Modal>
-                            <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
-                                <FaTrash className="mr-2" />
-                                Delete Tour
-                            </button>
+                                <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
+                                    <FaTrash className="mr-2" />
+                                    Delete Tour
+                                </button>
+                            </>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
+            <AddReviewForm onReviewChange={handleReviewChange}/>
+            <Reviews
+                reviews={review}
+                renderReview={(review: ReviewType) => (
+                    <>
+                        <div className="flex items-center">
+                            <FaStar className="text-yellow-500" />
+                            <span className="font-bold ml-1">{review.rating}</span>
+                        </div>
+                        <p className="mt-2">{review.review}</p>
+                        <p className="text-sm text-gray-500 mt-1">
+                            Reviewed on {new Date(review.createdAt ?? Date.now()).toLocaleDateString()}
+                        </p>
+                    </>
+                )}
+            />
         </div>
 
     );
