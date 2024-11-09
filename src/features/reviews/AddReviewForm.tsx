@@ -5,14 +5,14 @@ import { Textarea } from "@/component/Textarea"
 import { Label } from "@/component/Label"
 import { useCreateReviews } from "./useCreateReviews"
 import { useParams } from "react-router-dom"
-import {  ReviewType } from "@/types/ReviewType"
+import { ReviewType } from "@/types/ReviewType"
 
 type FormValues = {
     rating: number
     review: string
 }
 
-export default function AddReviewForm({onReviewChange}: {onReviewChange: (reviewData: ReviewType) => void}) {
+export default function AddReviewForm({ onReviewChange }: { onReviewChange: (reviewData: ReviewType) => void }) {
     const { id } = useParams()
     const { createReview } = useCreateReviews()
     const { handleSubmit, control, reset, setError, formState: { errors } } = useForm<FormValues>({
@@ -28,8 +28,9 @@ export default function AddReviewForm({onReviewChange}: {onReviewChange: (review
             return
         }
 
-        createReview({rating: data.rating * 1, review: data.review, tourId: id})
-        onReviewChange({rating: data.rating * 1, review: data.review})
+        createReview({ rating: data.rating * 1, review: data.review, tourId: id }, (data) => 
+            onReviewChange({rating: data.data.rating, review: data.data.review, _id: data.data.id})
+        )
         reset()
     }
 

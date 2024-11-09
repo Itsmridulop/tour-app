@@ -29,6 +29,36 @@ class Review {
             throw error
         }
     }
+
+    public async deleteReview(tourId: string, reviewId: string): Promise<void> {
+        console.log(reviewId)
+        console.log(tourId)
+        try {
+            await this.api.delete(`/tours/${tourId}/reviews/${reviewId}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`      
+                }    
+            })
+        } catch (error) {
+            console.error('Error in deleting your review', error)
+            throw error
+        }
+    }
+
+    public async updateReview(tourId: string, reviewId: string,reviewBody: Partial<ReviewType>): Promise<ReviewReturnType> {
+        try {
+            const response: AxiosResponse<ReviewReturnType> = await this.api.post(`/tours/${tourId}/reviews/${reviewId}`, reviewBody, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in updating your review', error)
+            throw error
+        }
+
+    }
 }
 
 const review = new Review()

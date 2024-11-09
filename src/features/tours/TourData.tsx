@@ -1,4 +1,4 @@
-import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaStar, FaDollarSign, FaMountain, FaPaperPlane, FaEdit, FaTrash } from "react-icons/fa";
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaUsers, FaStar, FaDollarSign, FaMountain, FaPaperPlane, FaEdit, FaTrash, FaTrashAlt } from "react-icons/fa";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useDeleteTour } from "./useDeleteTour";
 import { useTour } from "./useTour";
@@ -7,6 +7,9 @@ import { ReviewType, TourReviewType } from "../../types/ReviewType";
 import { ResponseType, UserDataType } from "../../types/userType";
 import { useUpdateTour } from "./useUpdateTour";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Button } from "@/component/Button";
+import { useDeleteReview } from "../reviews/useDeleteReview";
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -17,7 +20,6 @@ import Reviews from "./Reviews";
 import Modal from "@/component/Modal";
 import EditTourForm from "./EditTourForm";
 import AddReviewForm from "../reviews/AddReviewForm";
-import { useState } from "react";
 
 L.Icon.Default.mergeOptions({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -40,20 +42,35 @@ export default function TourData() {
     const { updateTour, isPending: isUpdating } = useUpdateTour()
     const { tourData, isLoading } = useTour(id || "")
     const { deleteTour, isPending } = useDeleteTour()
+    const { deleteReview } = useDeleteReview()
     const [review, setReview] = useState<(TourReviewType | ReviewType)[] | undefined>(tourData?.data.reviews ?? [])
-    console.log(review)
 
     const handleReviewChange = (reviewData: ReviewType) => {
-        setReview([{
-            rating: reviewData.rating,
-            review: reviewData.review,
-        }])
+        setReview((prevReviews) => {
+            const currentReviews = prevReviews || [];
+            return [...currentReviews,
+            {
+                _id: reviewData._id,
+                rating: reviewData.rating,
+                review: reviewData.review,
+            }]
+        })
     }
+
+    const handleReviewDelete = ({ reviewId, tourId }: { tourId?: string; reviewId?: string }) => {
+        setReview((prevReviews) => {
+            const updatedReviews = prevReviews?.filter(review => review._id !== reviewId) ;
+            console.log("Updated Reviews:", updatedReviews);
+            return updatedReviews;
+        });
+
+        deleteReview({ reviewId: reviewId ||  '', tourId: tourId || '' });
+    };
 
     if (isLoading || isUpdating) return <Spinner />
 
     const position: [number, number] = [tourData?.data.startLocation.coordinates?.[1] ?? 0, tourData?.data.startLocation.coordinates?.[0] ?? 0];
-
+console.log(review?.length)
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="overflow-hidden rounded-lg shadow-lg">
@@ -202,20 +219,33 @@ export default function TourData() {
                     </div>
                 </div>
             </div>
-            <AddReviewForm onReviewChange={handleReviewChange}/>
+            {user?.data.role !== "user" || <AddReviewForm onReviewChange={handleReviewChange} />}
             <Reviews
-                reviews={review}
-                renderReview={(review: ReviewType) => (
-                    <>
-                        <div className="flex items-center">
-                            <FaStar className="text-yellow-500" />
-                            <span className="font-bold ml-1">{review.rating}</span>
+                reviews={review?.length === 0 ? tourData?.data.reviews : [...(review || []), ...(tourData?.data.reviews || [])]}
+                renderReview={(review: ReviewType[]) => (
+                    review.map((reviewData, idx) =>
+                        <div key={idx} className="p-4 text-white">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                    <FaStar className="text-yellow-500" />
+                                    <span className="font-bold ml-2">{reviewData.rating}</span>
+                                </div>
+                            </div>
+                            <span className="mt-2 flex justify-between">{reviewData.review}
+                                <div className="flex space-x-2">
+                                    <Button variant="ghost" size="sm">
+                                        <FaEdit className="h-4 w-4 text-gray-500" />
+                                    </Button>
+                                    <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
+                                        <FaTrashAlt className="h-4 w-4 text-gray-500" />
+                                    </Button>
+                                </div>
+                            </span>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Reviewed on {new Date(reviewData.createdAt ?? Date.now()).toLocaleDateString()}
+                            </p>
                         </div>
-                        <p className="mt-2">{review.review}</p>
-                        <p className="text-sm text-gray-500 mt-1">
-                            Reviewed on {new Date(review.createdAt ?? Date.now()).toLocaleDateString()}
-                        </p>
-                    </>
+                    )
                 )}
             />
         </div>

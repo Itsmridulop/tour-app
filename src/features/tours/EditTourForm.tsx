@@ -79,12 +79,14 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
             }));
         } catch {
             showAlert('Error is getting corrdinates of some locations')
+            return
         }
         let startLocationCoord
         try {
             startLocationCoord = await fetchLocation(data?.startLocation.address)
         } catch {
             showAlert('Error in getting coordinates of start location')
+            return
         }
 
 
