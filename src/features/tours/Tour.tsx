@@ -2,6 +2,8 @@ import { useTours } from "./useTours";
 import type { TourType } from "../../types/tourTypes";
 import { useState } from "react";
 import { useCreateTour } from "./useCreateTour";
+import { useQueryClient } from "@tanstack/react-query";
+import { ResponseType } from "@/types/userType";
 
 import TourCard from "./TourCard";
 import Spinner from "../../component/Spinner";
@@ -20,6 +22,8 @@ export interface QueryType {
 function Tour() {
     const [queryStr, setQueryStr] = useState<QueryType>({ filterField: "", filterValue: "", sortBy: "", best: false });
 
+    const queryClient = useQueryClient()
+    const user: ResponseType | undefined = queryClient.getQueryData(['user'])
     const { tours, isLoading } = useTours((queryStr.filterField && queryStr.filterValue) || queryStr.sortBy ? `${queryStr.filterField}` + (queryStr.filterField === 'difficulty' || queryStr.filterField === "" ? "" : '[lte]') + `=${queryStr.filterValue}&sort=${queryStr.sortBy}` : " ", queryStr.best);
     const { createTour } = useCreateTour();
 
@@ -47,7 +51,7 @@ function Tour() {
                 </button>
                 <Filter onFilterChange={handleFilterChange} queryObj={queryStr} />
                 <Sort onSortChange={handleSortChange} queryObj={queryStr} />
-                <Modal>
+                {user?.data.role === 'admin' && <Modal>
                     <Modal.Open opens="createTour">
                         <button
                             className="bg-green-600 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-green-700 transition-colors"
@@ -58,7 +62,7 @@ function Tour() {
                     <Modal.Window name="createTour">
                         <TourEditForm updationFn={createTour} title="Create Tour" />
                     </Modal.Window>
-                </Modal>
+                </Modal>}
             </div>
 
             <main className="flex-grow flex flex-col items-center text-xl p-4">

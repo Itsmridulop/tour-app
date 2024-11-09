@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import type { CreateTourType, Statstype, TourResponse, TourResponseType } from "../types/tourTypes";
+import type { CreateTourType, MonthlyPlanType, Statstype, TourResponse, TourResponseType } from "../types/tourTypes";
 import { auth } from "./authApi";
 
 class Tour {
@@ -94,6 +94,21 @@ class Tour {
             throw error
         }
     }
+
+    public async getMonthlyPlan(): Promise<MonthlyPlanType> {
+        try {
+            const response: AxiosResponse<MonthlyPlanType> = await this.api.get(`/monthly-plan`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in getting monthly plan', error)
+            throw error
+        }
+    }
+
 }
 
 const tour = new Tour()

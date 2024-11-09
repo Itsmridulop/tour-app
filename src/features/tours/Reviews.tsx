@@ -1,13 +1,12 @@
 import React from "react";
-import { ReviewType } from "../../types/ReviewType";
+import { ReviewType, TourReviewType } from "../../types/ReviewType";
 
 interface ReviewSectionProps {
-    reviews?: ReviewType[];
-    renderReview: (review: ReviewType[]) => React.ReactNode;
+    reviews?: ReviewType[] | TourReviewType[];
+    renderReview: (review: ReviewType[] | TourReviewType[]) => React.ReactNode;
 }
 
 const Reviews: React.FC<ReviewSectionProps> = ({ reviews, renderReview }) => {
-    console.log(reviews)
     return (
         <div className="mt-6 mb-4">
             <h2 className="text-xl font-semibold">Review</h2>

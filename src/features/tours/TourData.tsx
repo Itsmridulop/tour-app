@@ -60,7 +60,6 @@ export default function TourData() {
     const handleReviewDelete = ({ reviewId, tourId }: { tourId?: string; reviewId?: string }) => {
         setReview((prevReviews) => {
             const updatedReviews = prevReviews?.filter(review => review._id !== reviewId) ;
-            console.log("Updated Reviews:", updatedReviews);
             return updatedReviews;
         });
 
@@ -70,7 +69,7 @@ export default function TourData() {
     if (isLoading || isUpdating) return <Spinner />
 
     const position: [number, number] = [tourData?.data.startLocation.coordinates?.[1] ?? 0, tourData?.data.startLocation.coordinates?.[0] ?? 0];
-console.log(review?.length)
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="overflow-hidden rounded-lg shadow-lg">
@@ -222,7 +221,7 @@ console.log(review?.length)
             {user?.data.role !== "user" || <AddReviewForm onReviewChange={handleReviewChange} />}
             <Reviews
                 reviews={review?.length === 0 ? tourData?.data.reviews : [...(review || []), ...(tourData?.data.reviews || [])]}
-                renderReview={(review: ReviewType[]) => (
+                renderReview={(review: ReviewType[] | TourReviewType[]) => (
                     review.map((reviewData, idx) =>
                         <div key={idx} className="p-4 text-white">
                             <div className="flex items-center justify-between">
@@ -233,12 +232,12 @@ console.log(review?.length)
                             </div>
                             <span className="mt-2 flex justify-between">{reviewData.review}
                                 <div className="flex space-x-2">
-                                    <Button variant="ghost" size="sm">
+                                    {(!reviewData.user?._id || `${user?.data._id}` === reviewData.user._id) && <><Button variant="ghost" size="sm">
                                         <FaEdit className="h-4 w-4 text-gray-500" />
                                     </Button>
                                     <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
                                         <FaTrashAlt className="h-4 w-4 text-gray-500" />
-                                    </Button>
+                                    </Button></>}
                                 </div>
                             </span>
                             <p className="text-sm text-gray-500 mt-1">

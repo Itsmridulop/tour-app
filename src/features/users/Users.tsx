@@ -17,6 +17,7 @@ import UpdateProfileForm from './UpdateProfileForm'
 import UpdatePasswordForm from './UpdatePasswordForm'
 import TourEditForm from '../tours/EditTourForm'
 import Stats from '../tours/Stats'
+import Siderbar from '@/component/Siderbar'
 
 export default function Component() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -95,58 +96,66 @@ export default function Component() {
             {
                 user?.data.role === "admin" &&
                 <>
-                    <Stats />
+                    <div className='flex'>
 
-                    <h2 className="text-xl font-semibold mb-4">Manage Tours</h2>
+                        <Siderbar />
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Your Tours</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4 h-96 overflow-scroll">
-                                {sampleTours?.data.map((tour) => (
-                                    <div key={tour.id} className="flex items-center  justify-between p-4 bg-gray-100 rounded-lg">
-                                        <div>
-                                            <h3 className="font-semibold">{tour.name}</h3>
-                                            <p className="text-sm text-gray-600">
-                                                {tour.duration} | Difficulty: {tour.difficulty}
-                                            </p>
-                                            <p className="text-sm font-medium">${tour.price}</p>
+                    </div>
+                    <div className='flex-1 p-4'>
+
+                        <Stats />
+
+                        <h2 className="text-xl font-semibold mb-4">Manage Tours</h2>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Your Tours</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4 h-96 overflow-scroll">
+                                    {sampleTours?.data.map((tour) => (
+                                        <div key={tour.id} className="flex items-center  justify-between p-4 bg-gray-100 rounded-lg">
+                                            <div>
+                                                <h3 className="font-semibold">{tour.name}</h3>
+                                                <p className="text-sm text-gray-600">
+                                                    {tour.duration} | Difficulty: {tour.difficulty}
+                                                </p>
+                                                <p className="text-sm font-medium">${tour.price}</p>
+                                            </div>
+                                            <div className="flex space-x-2">
+                                                <Modal>
+                                                    <Modal.Open opens='updateTour'>
+                                                        <Button variant="ghost" size="sm" >
+                                                            <FaEdit className="h-4 w-4" />
+                                                        </Button>
+                                                    </Modal.Open>
+                                                    <Modal.Window name="updateTour">
+                                                        <TourEditForm tour={tour} updationFn={updateTour} title='Edit Tour' />
+                                                    </Modal.Window>
+                                                </Modal>
+                                                <Button variant="ghost" size="sm">
+                                                    <FaTrashAlt className="h-4 w-4" onClick={() => deleteTour(tour._id)} />
+                                                </Button>
+                                            </div>
                                         </div>
-                                        <div className="flex space-x-2">
-                                            <Modal>
-                                                <Modal.Open opens='updateTour'>
-                                                    <Button variant="ghost" size="sm" >
-                                                        <FaEdit className="h-4 w-4" />
-                                                    </Button>
-                                                </Modal.Open>
-                                                <Modal.Window name="updateTour">
-                                                    <TourEditForm tour={tour} updationFn={updateTour} title='Edit Tour' />
-                                                </Modal.Window>
-                                            </Modal>
-                                            <Button variant="ghost" size="sm">
-                                                <FaTrashAlt className="h-4 w-4" onClick={() => deleteTour(tour._id)} />
+                                    ))}
+                                </div>
+                                <div className="mt-6">
+                                    <Modal>
+                                        <Modal.Open opens='createTour'>
+                                            <Button>
+                                                <FaPlus className="h-4 w-4 mr-2" />
+                                                Add New Tour
                                             </Button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="mt-6">
-                                <Modal>
-                                    <Modal.Open opens='createTour'>
-                                        <Button>
-                                            <FaPlus className="h-4 w-4 mr-2" />
-                                            Add New Tour
-                                        </Button>
-                                    </Modal.Open>
-                                    <Modal.Window name="createTour">
-                                        <TourEditForm updationFn={createTour} title='Create Tour' />
-                                    </Modal.Window>
-                                </Modal>
-                            </div>
-                        </CardContent>
-                    </Card>
+                                        </Modal.Open>
+                                        <Modal.Window name="createTour">
+                                            <TourEditForm updationFn={createTour} title='Create Tour' />
+                                        </Modal.Window>
+                                    </Modal>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </>
             }
         </div>

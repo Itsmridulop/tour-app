@@ -31,8 +31,6 @@ class Review {
     }
 
     public async deleteReview(tourId: string, reviewId: string): Promise<void> {
-        console.log(reviewId)
-        console.log(tourId)
         try {
             await this.api.delete(`/tours/${tourId}/reviews/${reviewId}`, {
                 headers: {

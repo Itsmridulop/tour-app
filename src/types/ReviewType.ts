@@ -3,6 +3,7 @@ export interface ReviewType {
     _id?: string
     review: string;
     createdAt?: string;
+ user?: {_id: string};
     tourId?: string
 }
 
