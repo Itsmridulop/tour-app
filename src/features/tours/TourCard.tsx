@@ -12,7 +12,7 @@ function TourCard({ tour }: { tour: TourType }) {
     <div className="max-w-xs bg-white rounded-2xl shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-2 hover:shadow-xl" >
       <div className="relative">
         <img
-          src={`src/public/img/tours/${tour.imageCover}`}
+          src={`${tour.imageCover}`}
           alt="Tour"
           className="w-full h-56 object-cover"
         />

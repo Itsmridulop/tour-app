@@ -373,7 +373,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                                                             />
                                                             {tour?.imageCover && (
                                                                 <img
-                                                                    src={`/src/public/img/tours/${tour.imageCover}`}
+                                                                    src={`${tour.imageCover}`}
                                                                     alt="Current Cover"
                                                                     className="mt-2 h-32 w-32 object-cover rounded"
                                                                 />

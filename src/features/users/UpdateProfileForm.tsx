@@ -1,24 +1,25 @@
-import { useForm } from "react-hook-form"
+import { useForm } from "react-hook-form";
 import { CreateUserType, UserDataType } from "../../types/userType";
 import { useUpdateProfile } from "./useUpdateProfile";
-import { parsePhoto } from "../../utils/parsePhoto";
 
 function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; onClose?: () => void }) {
-    const { handleSubmit, register, reset, formState: { errors } } = useForm<CreateUserType>({
+    const { handleSubmit, register, reset, setValue, formState: { errors } } = useForm<CreateUserType>({
         defaultValues: {
             name: user?.name,
         },
     });
-    const { updateProfile } = useUpdateProfile();
+    const { updateProfile, isPending } = useUpdateProfile();
 
     const submitHandler = (data: Partial<CreateUserType>) => {
-        if (data.name === user?.name && (!data.photo || (typeof data.photo !== 'string' && Object.keys(data.photo).length === 0))) return;
-        const photoName = parsePhoto(data)
-        const updateProfileObj = {
-            ...data,
-            photo: photoName 
-        };
-        updateProfile(updateProfileObj, {
+        if (data.name === user?.name && !data.photo) return;
+
+        const formData = new FormData();
+        formData.append('name', data.name || '');
+        if (data.photo && data.photo instanceof File) {
+            formData.append('photo', data.photo);
+        }
+
+        updateProfile(formData, {
             onSettled: () => reset(),
             onSuccess: () => onClose?.(),
         });
@@ -41,7 +42,7 @@ function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; 
                     />
                     {errors.name && <div className="text-red-500">{errors.name.message}</div>}
                 </div>
-                
+
                 <div className="mb-4">
                     <label className="block text-gray-700 font-medium mb-2" htmlFor="profilePhoto">
                         Profile Photo
@@ -50,16 +51,20 @@ function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; 
                         type="file"
                         id="profilePhoto"
                         className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-green-200"
-                        {...register('photo')}
+                        onChange={e => {
+                            const file = e.target.files?.[0];
+                            setValue("photo", file);
+                        }}
                     />
                     {errors.photo && <div className="text-red-500">{errors.photo.message}</div>}
                 </div>
-                
+
                 <button
                     type="submit"
                     className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-200"
+                    disabled={isPending}
                 >
-                    Update Profile
+                    {isPending ? 'Updating...' : 'Update Profile'}
                 </button>
             </form>
         </div>

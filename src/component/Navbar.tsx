@@ -55,7 +55,7 @@ function Navbar() {
           to="/users"
           className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition"
         >
-          {isAuth && <img className="h-10 w-10 rounded-full" src={`/src/public/img/users/${user?.data.photo || 'default.jpg'}`} alt="propifle photo" />}
+          {isAuth && <img className="h-10 w-10 rounded-full" src={`${user?.data.photo || '/src/public/img/users/default.jpg'}`} alt="propifle photo" />}
         </Link>
       </div>
     </nav>

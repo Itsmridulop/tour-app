@@ -6,10 +6,7 @@ class User {
     private api: AxiosInstance
     constructor() {
         this.api = axios.create({
-            baseURL: "http://localhost:8080/api/v1/users",
-            headers: {
-                'Content-Type': 'Application/json',
-            }
+            baseURL: "http://localhost:8080/api/v1/users"
         })
     }
 
@@ -17,7 +14,9 @@ class User {
         try {
             const response: AxiosResponse<{ status: string; result: number; data: UserDataType }> = await this.api.get('/', {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'Application/json',
+
                 }
             })
             return response.data
@@ -27,11 +26,12 @@ class User {
         }
     }
 
-    public async createUser(userData: CreateUserType): Promise<ResponseType> {
+    public async createUser(userData: FormData): Promise<ResponseType> {
         try {
             const response: AxiosResponse<ResponseType> = await this.api.post('/', userData, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             })
             return response.data
@@ -45,7 +45,9 @@ class User {
         try {
             await this.api.delete(`/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'Application/json',
+
                 }
             })
         } catch (error) {
@@ -58,7 +60,9 @@ class User {
         try {
             const response: AxiosResponse<ResponseType> = await this.api.get(`/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'Application/json',
+
                 }
             })
             return response.data
@@ -72,7 +76,9 @@ class User {
         try {
             await this.api.delete('/deleteMe', {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'Application/json',
+
                 }
             })
         } catch (error) {

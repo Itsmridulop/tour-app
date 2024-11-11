@@ -13,18 +13,12 @@ export interface ResponseType {
   data: UserDataType;
 }
 
-export interface PhotoType {
-  [key: number]: {
-    name: string
-  };
-}
-
 export interface CreateUserType {
   name: string;
   role: string;
   password: string;
   confirmPassword: string;
-  photo?: PhotoType | string;
+  photo?: File;
   email: string
 }
 

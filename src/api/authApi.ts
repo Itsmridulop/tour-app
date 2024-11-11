@@ -1,21 +1,22 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { CreateUserType, ResponseType, UserPasswordType } from "../types/userType";
+import { ResponseType, UserPasswordType } from "../types/userType";
 
 class Authenication {
   private api: AxiosInstance;
 
   constructor() {
     this.api = axios.create({
-      baseURL: "http://localhost:8080/api/v1/users",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      baseURL: "http://localhost:8080/api/v1/users"
     });
   }
 
   public async signup(userData: { name: string; email: string; password: string; confirmPassword: string }): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.post("/signup", userData);
+      const response: AxiosResponse<ResponseType> = await this.api.post("/signup", userData, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
       this.saveToken(response.data.token);
       return response.data;
     } catch (error) {
@@ -25,8 +26,14 @@ class Authenication {
   }
 
   public async login(userData: { email: string; password: string }): Promise<ResponseType> {
+    console.log(userData)
+
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.post("/login", userData);
+      const response: AxiosResponse<ResponseType> = await this.api.post("/login", userData, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
       this.removeToken()
       this.saveToken(response.data.token);
       return response.data;
@@ -40,7 +47,8 @@ class Authenication {
     try {
       const response: AxiosResponse<ResponseType> = await this.api.get('/me', {
         headers: {
-          'Authorization': `Bearer ${this.gettoken()}`
+          'Authorization': `Bearer ${this.gettoken()}`,
+          "Content-Type": "application/json"
         }
       })
       return response.data
@@ -50,11 +58,12 @@ class Authenication {
     }
   }
 
-  public async updateProfile(userData: Partial<CreateUserType>): Promise<ResponseType> {
+  public async updateProfile(userData: FormData): Promise<ResponseType> {
     try {
       const response: AxiosResponse<ResponseType> = await this.api.patch('/updateMe', userData, {
         headers: {
-          'Authorization': `Bearer ${this.gettoken()}`
+          'Authorization': `Bearer ${this.gettoken()}`,
+          'Content-Type': 'multipart/form-data',
         }
       })
       return response.data
@@ -68,7 +77,8 @@ class Authenication {
     try {
       const response: AxiosResponse<ResponseType> = await this.api.patch('/updatePassword', passwordData, {
         headers: {
-          'Authorization': `Bearer ${this.gettoken()}`
+          'Authorization': `Bearer ${this.gettoken()}`,
+          "Content-Type": "application/json"
         }
       })
       this.removeToken()
@@ -80,9 +90,13 @@ class Authenication {
     }
   }
 
-  public async forgotPassword(data: {email: string}): Promise<{status: string; message: string }> {
+  public async forgotPassword(data: { email: string }): Promise<{ status: string; message: string }> {
     try {
-      const response: AxiosResponse<{status: string; message: string}> = await this.api.post('/forgotPassword', data)
+      const response: AxiosResponse<{ status: string; message: string }> = await this.api.post('/forgotPassword', data, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
       return response.data
     } catch (error) {
       console.error('Error while resettting your pasworrd', error)
@@ -90,11 +104,15 @@ class Authenication {
     }
   }
 
-  public async resetPassword(data: {token?: string; password: string; confirmPassword: string}): Promise<ResponseType> {
+  public async resetPassword(data: { token?: string; password: string; confirmPassword: string }): Promise<ResponseType> {
     try {
       const response: AxiosResponse<ResponseType> = await this.api.patch(`/resetPassword/${data.token}`, {
         password: data.password,
         confirmPassword: data.confirmPassword
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
       return response.data
     } catch (error) {

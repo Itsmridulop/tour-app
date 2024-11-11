@@ -54,7 +54,7 @@ const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr,
 
                                     {image && typeof image === 'string' && image.length > 0 && (
                                         <img
-                                            src={`/src/public/img/tours/${image}`}
+                                            src={`${image}`}
                                             alt={`Image ${index + 1}`}
                                             className="h-10 w-10 object-cover rounded-md border border-gray-300"
                                         />

@@ -75,7 +75,7 @@ export default function TourData() {
             <div className="overflow-hidden rounded-lg shadow-lg">
                 <div className="relative h-[300px] sm:h-[400px] rounded-lg overflow-hidden">
                     <img
-                        src={`/src/public/img/tours/${tourData?.data.imageCover}`}
+                        src={`${tourData?.data.imageCover}`}
                         alt={tourData?.data.name}
                         className="rounded-lg"
                     />
@@ -142,7 +142,7 @@ export default function TourData() {
                     {tourData?.data.images && <Images images={tourData?.data.images}
                         renderImage={(image: string, index: number) => (
                             <img
-                                src={`/src/public/img/tours/${image}`}
+                                src={`${image}`}
                                 alt={`Tour image ${index + 1}`}
                                 className="transition-transform duration-300 hover:scale-110"
                             />

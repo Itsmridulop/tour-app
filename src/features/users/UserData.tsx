@@ -53,7 +53,7 @@ function UserData() {
                 <div className="flex items-center space-x-4">
                     <div className="h-20 w-20 bg-gray-200 rounded-full overflow-hidden">
                         <img
-                            src={`/src/public/img/users/${userInfo?.data.photo ?? 'default.jpg'}`}
+                            src={`${userInfo?.data.photo ?? '/src/public/img/users/default.jpg'}`}
                             alt={userInfo?.data.name}
                             className="object-cover h-full w-full"
                         />

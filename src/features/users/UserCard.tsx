@@ -16,7 +16,7 @@ function UserCard({ user }: { user: UserDataType }) {
         <div className="bg-white shadow-md rounded-lg p-4 transform transition duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer" onClick={() => navigate(`user/${user._id}`)}>
             <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden">
-                    <img src={`/src/public/img/users/${user.photo ?? 'default.jpg'}`} alt={user.name} className="w-full h-full object-cover" />
+                    <img src={`${user.photo ?? '/src/public/img/users/default.jpg'}`} alt={user.name} className="w-full h-full object-cover" />
                 </div>
                 <div>
                     <h2 className="text-lg font-semibold">{user.name}</h2>

@@ -38,7 +38,7 @@ export default function Component() {
             <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
                 <div className="flex items-center space-x-4 mb-4 md:mb-0">
                     <Avatar className="w-20 h-20">
-                        <AvatarImage src={`/src/public/img/users/${user?.data.photo || 'defualt.jpg'}`} alt="User's avatar" />
+                        <AvatarImage src={`${user?.data.photo || '/src/public/img/users/defualt.jpg'}`} alt="User's avatar" />
                         <AvatarFallback>UN</AvatarFallback>
                     </Avatar>
                     <div>

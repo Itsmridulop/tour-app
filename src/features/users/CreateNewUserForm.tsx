@@ -1,24 +1,21 @@
 import { useForm } from "react-hook-form"
 import { useCreateUser } from "./useCreateUser";
 import { CreateUserType } from "../../types/userType";
-import { parsePhoto } from "../../utils/parsePhoto";
+import { FormDataController } from "@/utils/FormDataController";
 
 function CreateNewUserForm({onClose}: {onClose?: () => void}) {
-    const { register, handleSubmit, reset, getValues, formState: { errors } } = useForm<CreateUserType>()
+    const { register, handleSubmit, reset, getValues, setValue, formState: { errors } } = useForm<CreateUserType>()
     const { createUser, isPending } = useCreateUser()
 
     const submitHandler = (data: CreateUserType) => {
-        const photoName = parsePhoto(data)
-        const creatUserObj = {
-            ...data,
-            photo: photoName 
-        }
-        createUser (creatUserObj, {
+        const formData = FormDataController(data);
+    
+        createUser(formData, {
             onSettled: () => reset(),
-            onSuccess: () => onClose?.()
+            onSuccess: () => onClose?.(),
         });
-    }
-
+    };
+    
     return (
         <div className="w-[28rem] max-w-sm mx-auto p-6">
             <h2 className="text-xl font-bold text-center mb-6">Create New User</h2>
@@ -110,7 +107,12 @@ function CreateNewUserForm({onClose}: {onClose?: () => void}) {
                         id="photo"
                         accept="image/*"
                         className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                        {...register('photo')}
+                        // {...register('photo')}
+                        onChange={e => {
+                            const file = e.target.files?.[0]
+                            setValue('photo', file)
+                        }} 
+
                     />
                 </div>
                 {errors?.photo?.message && <div>{errors.photo.message}</div>}
