@@ -14,7 +14,7 @@ function Navbar() {
   const isAuth = auth.isAuthenticated();
 
   return (
-    <nav className="flex justify-between  w-[98vw] items-center bg-zinc-700 m-6 px-8 py-4 text-white">
+    <nav className="flex justify-between shadow-md w-[98vw] items-center bg-zinc-700 m-6 px-8 py-4 text-white">
       <div className="flex-1 space-x-6">
         {isAuth && (
           <>
@@ -55,7 +55,8 @@ function Navbar() {
           to="/users"
           className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition"
         >
-          {isAuth && <img className="h-10 w-10 rounded-full" src={`${user?.data.photo || '/src/public/img/users/default.jpg'}`} alt="propifle photo" />}
+          {(isAuth && user?.data.photo) && <img className="h-10 w-10 rounded-full" src={`${user?.data.photo || '/src/public/img/users/default.jpg'}`} alt="propifle photo" />}
+          {(!user?.data.photo && isAuth) && <img className="h-10 w-10 rounded-full" src={'/src/public/img/users/default.jpg'} alt="propifle photo" />}
         </Link>
       </div>
     </nav>

@@ -56,7 +56,7 @@ export interface CreateTourType {
     summary: string;
     description: string;
     imageCover: string | File;
-    images?: File[] | string[];
+    images?: (File | string)[];
     startDates: string[];
     secretTour: boolean;
     locations: Array<{

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { CreateUserType, UserDataType } from "../../types/userType";
 import { useUpdateProfile } from "./useUpdateProfile";
+import { FormDataController } from "@/utils/FormDataController";
 
 function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; onClose?: () => void }) {
     const { handleSubmit, register, reset, setValue, formState: { errors } } = useForm<CreateUserType>({
@@ -13,11 +14,7 @@ function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; 
     const submitHandler = (data: Partial<CreateUserType>) => {
         if (data.name === user?.name && !data.photo) return;
 
-        const formData = new FormData();
-        formData.append('name', data.name || '');
-        if (data.photo && data.photo instanceof File) {
-            formData.append('photo', data.photo);
-        }
+        const formData = FormDataController(data)
 
         updateProfile(formData, {
             onSettled: () => reset(),
@@ -61,7 +58,7 @@ function UpdateProfileForm({ user, onClose }: { user: UserDataType | undefined; 
 
                 <button
                     type="submit"
-                    className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-200"
+                    className={`w-full bg-green-${isPending ? '600' : '500'} text-white p-2 rounded hover:bg-green-600 transition duration-200`}
                     disabled={isPending}
                 >
                     {isPending ? 'Updating...' : 'Update Profile'}

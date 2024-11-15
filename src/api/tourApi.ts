@@ -7,10 +7,7 @@ class Tour {
 
     constructor() {
         this.api = axios.create({
-            baseURL: "http://localhost:8080/api/v1/tours",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            baseURL: "http://localhost:8080/api/v1/tours"
         });
     }
 
@@ -30,7 +27,8 @@ class Tour {
         try {
             const response: AxiosResponse<TourResponseType> = await this.api.get(`/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    "Content-Type": "application/json",
                 }
             })
             return response.data
@@ -44,7 +42,8 @@ class Tour {
         try {
             await this.api.delete(`/${id}`, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    "Content-Type": "application/json",
                 }
             })
         } catch (error) {
@@ -53,11 +52,12 @@ class Tour {
         }
     }
 
-    public async updateTour(tourData: CreateTourType, id?: string): Promise<TourResponse> {
+    public async updateTour(tourData: FormData, id?: string): Promise<TourResponse> {
         try {
             const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, tourData, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             })
             return response.data
@@ -68,10 +68,12 @@ class Tour {
     }
 
     public async createTour(tourData: CreateTourType): Promise<TourResponse> {
+        
         try {
             const response: AxiosResponse<TourResponse> = await this.api.post('/', tourData, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             })
             return response.data
@@ -85,7 +87,8 @@ class Tour {
         try {
             const response: AxiosResponse<Statstype> = await this.api.get('/stats', {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    "Content-Type": "application/json",
                 }
             })
             return response.data
@@ -99,7 +102,8 @@ class Tour {
         try {
             const response: AxiosResponse<MonthlyPlanType> = await this.api.get(`/monthly-plan`, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    "Content-Type": "application/json",
                 }
             })
             return response.data

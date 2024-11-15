@@ -1,5 +1,5 @@
 import { tour } from "@/api/tourApi"
-import { CreateTourType } from "@/types/tourTypes"
+// import { CreateTourType } from "@/types/tourTypes"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import toast from "react-hot-toast"
@@ -8,7 +8,7 @@ export const useUpdateTour = () => {
     const queryClient = useQueryClient()
 
     const { mutate: updateTour, isPending } = useMutation({
-        mutationFn: ({ tourData, id }: { tourData: CreateTourType, id?: string }) => tour.updateTour(tourData, id),
+        mutationFn: ({ formData, id }: { formData: FormData, id?: string }) => tour.updateTour(formData, id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['tour']

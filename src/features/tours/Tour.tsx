@@ -39,7 +39,7 @@ function Tour() {
 
     return (
         <div className="flex flex-col min-h-screen text-white">
-            <div className="flex justify-between items-center w-full px-4 py-6 shadow-md space-x-4">
+            <div className="flex justify-between items-center w-full px-4 py-6  space-x-4">
                 <button
                     className="bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-blue-700 transition-colors"
                     onClick={() => setQueryStr({

@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom'
 import { fetchLocation } from '@/utils/fetchLocation'
 import { useAlert } from '@/component/Alert'
 import { UseMutateFunction } from '@tanstack/react-query'
+import { FormDataController } from '@/utils/FormDataController'
 
 import TourImagesUpload from './TourImageUploader'
 import TourStartDatesUpload from './TourStartDateUpload'
@@ -22,7 +23,7 @@ import TourStartDatesUpload from './TourStartDateUpload'
 interface TourEditFormProps {
     tour?: TourType;
     updationFn: UseMutateFunction<TourResponse, Error, {
-        tourData: CreateTourType;
+        formData: FormData;
         id?: string;
     }, unknown>
     onClose?: () => void;
@@ -61,11 +62,6 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
             return;
         }
 
-        const parsedImageObj = images?.map((image) => {
-            if (typeof image === 'string') return image;
-            else return image.name;
-        });
-        const parsedCoverImage = typeof data.imageCover === 'string' ? data.imageCover : data.imageCover.name
         setIsLoading(true)
         let locationObj
         try {
@@ -102,16 +98,17 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
 
         const tourData: CreateTourType = {
             ...data,
-            imageCover: parsedCoverImage,
+            images: images,
             discount: data.discount && data.discount * 1,
-            images: [...parsedImageObj || []],
             locations: [...locationObj || []],
             startDates: [...startDate || []],
             startLocation: { ...startLocaationObj }
         };
+        const formData = FormDataController(tourData);
         setIsLoading(false)
+        formData.forEach(ele => console.log(ele))
         onClose?.()
-        updationFn({ tourData, id }, {
+        updationFn({ formData, id }, {
             onSettled: () => reset()
         });
     };
