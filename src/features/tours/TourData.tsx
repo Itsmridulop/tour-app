@@ -20,6 +20,7 @@ import Reviews from "./Reviews";
 import Modal from "@/component/Modal";
 import EditTourForm from "./EditTourForm";
 import AddReviewForm from "../reviews/AddReviewForm";
+import CreateBookingForm from "../bookings/CreateBookingForm.";
 
 L.Icon.Default.mergeOptions({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -59,11 +60,11 @@ export default function TourData() {
 
     const handleReviewDelete = ({ reviewId, tourId }: { tourId?: string; reviewId?: string }) => {
         setReview((prevReviews) => {
-            const updatedReviews = prevReviews?.filter(review => review._id !== reviewId) ;
+            const updatedReviews = prevReviews?.filter(review => review._id !== reviewId);
             return updatedReviews;
         });
 
-        deleteReview({ reviewId: reviewId ||  '', tourId: tourId || '' });
+        deleteReview({ reviewId: reviewId || '', tourId: tourId || '' });
     };
 
     if (isLoading || isUpdating) return <Spinner />
@@ -193,10 +194,17 @@ export default function TourData() {
 
                     <div className="p-6 space-y-4">
                         <div className="flex space-x-4">
-                            <button className="flex items-center bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition transform hover:scale-105">
-                                <FaPaperPlane className="mr-2" />
-                                Book Now
-                            </button>
+                            <Modal>
+                                <Modal.Open opens="bookTour">
+                                    <button className="flex items-center bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition transform hover:scale-105">
+                                        <FaPaperPlane className="mr-2" />
+                                        Book Now
+                                    </button>
+                                </Modal.Open>
+                                <Modal.Window name="bookTour">
+                                    <CreateBookingForm />
+                                </Modal.Window>
+                            </Modal>
                             {user?.data.role === 'admin' && <><Modal>
                                 <Modal.Open opens="updateTour">
                                     <button className="flex items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
@@ -235,9 +243,9 @@ export default function TourData() {
                                     {(!reviewData.user?._id || `${user?.data._id}` === reviewData.user._id) && <><Button variant="ghost" size="sm">
                                         <FaEdit className="h-4 w-4 text-gray-500" />
                                     </Button>
-                                    <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
-                                        <FaTrashAlt className="h-4 w-4 text-gray-500" />
-                                    </Button></>}
+                                        <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
+                                            <FaTrashAlt className="h-4 w-4 text-gray-500" />
+                                        </Button></>}
                                 </div>
                             </span>
                             <p className="text-sm text-gray-500 mt-1">
