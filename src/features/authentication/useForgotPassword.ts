@@ -9,9 +9,8 @@ export const useForgotPassword = () => {
         onSuccess: () => {
             toast.success("Password reset email sent successfully");
         },
-        onError: error => {
-            toast.error(error.message);
-            console.error(error)
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(error.response.data.message);
         }
     });
     

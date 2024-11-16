@@ -14,9 +14,8 @@ export const useUpdatePassword = () => {
                 queryKey: ['user']
             })
         },
-        onError: error => {
-            toast.error(error.message)
-            console.error(error)
+        onError: (error: {reponse: {data: {message: string}}}) => {
+            toast.error(`Unable to update your password: ${error.reponse.data.message}`)
         }
     })
     return { updatePassword, isPending }

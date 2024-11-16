@@ -17,8 +17,8 @@ export const useDeleteTour = () => {
             navigate(-1)
             toast.success('Tour deleted successfully')
         },
-        onError: () => {
-            toast.error('Error in deleting this tour')
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Error in deleting this tour: ${error.response.data.message}`)
         }
     })
 

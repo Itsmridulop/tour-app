@@ -14,9 +14,8 @@ export const useResetPassword = () => {
                 queryKey: ['user'],
             })
         },
-        onError: (error) => {
-            toast.error(error.message)
-            console.error(error)
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Unabel to send reset token ${error.response.data.message}`)
         },
     })
 

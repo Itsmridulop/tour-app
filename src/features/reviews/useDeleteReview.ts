@@ -9,8 +9,8 @@ export const useDeleteReview = () => {
         onSuccess: () => {
             toast.success('Review is deleted successfully')
         },
-        onError: () => {
-            toast.error('Failed to delete review')
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Failed to delete review ${error.response.data.message}`)
         }
     })
 

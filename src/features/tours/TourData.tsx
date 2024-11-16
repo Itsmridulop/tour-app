@@ -154,9 +154,9 @@ export default function TourData() {
                     <Guides
                         guides={tourData?.data.guides}
                         renderGuide={(guide: UserDataType) => (
-                            <>
+                            <div className="flex space-x-4">
                                 <img
-                                    src={`/src/public/img/users/${guide.photo ?? 'default.jpg'}`}
+                                    src={`${guide.photo ?? '/src/public/img/users/default.jpg'}`}
                                     alt={guide.name}
                                     className="h-10 w-10 rounded-full"
                                 />
@@ -164,7 +164,7 @@ export default function TourData() {
                                     <p className="font-semibold">{guide.name}</p>
                                     <p className="text-sm text-gray-500">{guide.role}</p>
                                 </div>
-                            </>
+                            </div>
                         )}
                     />
                 </div>

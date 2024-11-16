@@ -16,7 +16,6 @@ import { fetchLocation } from '@/utils/fetchLocation'
 import { useAlert } from '@/component/Alert'
 import { UseMutateFunction } from '@tanstack/react-query'
 
-// import TourImagesUpload from './TourImageUploader'
 import TourStartDatesUpload from './TourStartDateUpload'
 
 interface TourEditFormProps {
@@ -31,15 +30,11 @@ interface TourEditFormProps {
 }
 
 const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title, isPending }) => {
-    // const [images, setImages] = useState<(string | File)[] | undefined>(tour?.images)
     const [startDate, setStartDate] = useState<string[] | undefined>(tour?.startDates)
     const [isLoading, setIsLoading] = useState(false)
 
     const { control, watch, reset, handleSubmit, register, formState: { errors } } = useForm<CreateTourType>({
-        defaultValues: {
-            ...tour,
-            guides: [""]
-        }
+        defaultValues: tour
     })
     const { showAlert } = useAlert()
     const { id } = useParams()
@@ -47,6 +42,11 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
     const { fields: locationFields, append: appendLocation, remove: removeLocation } = useFieldArray({
         control,
         name: "locations"
+    })
+
+    const { fields: guidesField, append: appendGuide, remove: removeGuide } = useFieldArray({
+        control,
+        name: "guides"
     })
 
     const price = watch("price");
@@ -104,6 +104,8 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
             startLocation: { ...startLocaationObj }
         };
         setIsLoading(false)
+        console.log(data)
+        console.log(tourData)
         updationFn({ tourData, id }, {
             onSettled: () => reset(),
             onSuccess: () => onClose?.()
@@ -125,7 +127,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
                             <TabsTrigger value="images">Images</TabsTrigger>
                             <TabsTrigger value="dates">Dates</TabsTrigger>
                             <TabsTrigger value="locations">Locations</TabsTrigger>
-                            {/* <TabsTrigger value="guides">Guides</TabsTrigger> */}
+                            <TabsTrigger value="guides">Guides</TabsTrigger>
                         </TabsList>
                         <ScrollArea className="flex-grow">
                             <div className="h-full flex items-center justify-center">
@@ -377,7 +379,6 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
                                                 />
                                                 {errors.imageCover && <p className="text-red-500">{errors.imageCover.message}</p>}
                                             </div>
-                                            {/* <TourImagesUpload control={control} imagesArr={images} setter={setImages} /> */}
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="dates" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center h-full">
@@ -491,36 +492,57 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
                                             </Card>
                                         </div>
                                     </TabsContent>
-                                    {/* <TabsContent value="guides" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center">
-                                        <div className="space-y-4 w-full">
+                                    <TabsContent value="guides" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center">
+                                        <div className="space-y-4 w-full flex flex-col">
                                             <Label>Tour Guides</Label>
-                                            {tour?.guides && tour.guides.map((field, index) => (
+                                            {guidesField.map((_, index) => (
                                                 <div key={index} className="flex items-center space-x-2">
-                                                    <Input
-                                                        // defaultValue={field}
-                                                        placeholder={`Guide ${index + 1}`}
+                                                    <Controller
+                                                        name={`guides.${index}.email`}
+                                                        control={control}
+                                                        rules={{
+                                                            required: 'A tour must have a guide',
+                                                            pattern: {
+                                                                value: /\S+@\S+\.\S+/,
+                                                                message: 'Please Enter a valid email',
+                                                            },
+                                                        }}
+                                                        render={({ field, fieldState: { error } }) => (
+                                                            <div className="space-y-2 w-full">
+                                                                <Input
+                                                                    placeholder={`Guide ${index + 1}`}
+                                                                    className="w-full"
+                                                                    type="email"
+                                                                    {...field}
+                                                                />
+                                                                {error && <p className="text-red-500">{error.message}</p>}
+                                                            </div>
+                                                        )}
                                                     />
                                                     <Button
                                                         type="button"
                                                         variant="outline"
                                                         size="icon"
                                                         onClick={() => removeGuide(index)}
+                                                        className="self-start mt-1"
                                                     >
                                                         <MinusCircledIcon className="h-4 w-4" />
                                                     </Button>
                                                 </div>
+
                                             ))}
+
                                             <Button
                                                 type="button"
                                                 variant="outline"
                                                 size="sm"
-                                                onClick={() => appendGuide("")}
+                                                onClick={() => appendGuide({ email: '' })}
                                             >
                                                 <PlusCircledIcon className="h-4 w-4 mr-2" />
                                                 Add Guide
                                             </Button>
                                         </div>
-                                    </TabsContent> */}
+                                    </TabsContent>
                                 </div>
                             </div>
                         </ScrollArea>

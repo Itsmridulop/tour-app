@@ -29,8 +29,8 @@ function Window({ children, name }: { children: ReactNode; name: string }) {
   if (name !== openName) return null
 
   return (
-    <div className="fixed top-0 left-0 w-full h-screen bg-white/10 backdrop-blur-sm z-[100000] transition-all duration-500 ">
-      <div ref={ref} className="fixed top-2/4 left-2/4 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 shadow-custom-lg z-[100000] rounded-lg">
+    <div className="fixed top-0 left-0 w-full h-screen bg-white/10 backdrop-blur-sm z-[1000] transition-all duration-500 ">
+      <div ref={ref} className="fixed top-2/4 left-2/4 transform -translate-x-1/2 -translate-y-1/2 bg-white p-4 shadow-custom-lg z-[1000] rounded-lg">
         <button onClick={close} className="bg-none border-none p-1 rounded-sm translate-x-2 transition-all duration-200 absolute top-3 right-4 hover:bg-gray-100">
           <HiXMark />
         </button>

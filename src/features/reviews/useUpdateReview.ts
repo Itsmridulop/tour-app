@@ -9,8 +9,8 @@ export const useUpdateReview = () => {
         onSuccess: () => {
             toast.success('Review is updated successfully')
         },
-        onError: () => {
-            toast.error('Failed to update review')
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Failed to update review ${error.response.data.message}`)
         }
     })
     

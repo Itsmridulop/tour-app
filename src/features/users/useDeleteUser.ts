@@ -14,8 +14,8 @@ export const useDeleteUser = () => {
                 queryKey: ['all-users']
             })
         },
-        onError: () => {
-            toast.error('Error in deleting this user')
+        onError: (error: {reponse: {data: {message: string}}}) => {
+            toast.error(`Error in deleting this user: ${error.reponse.data.message}`)
         }
     })
     

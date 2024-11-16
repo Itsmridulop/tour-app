@@ -10,9 +10,9 @@ const Guides: React.FC<GuideSectionProps> = ({ guides, renderGuide }) => {
     return (
         <div className="mt-6">
             <h2 className="text-xl font-semibold">Tour Guide</h2>
-            <div className="flex items-center space-x-4 mt-4">
-                {(guides && typeof guides[0] === 'string') ? (
-                    renderGuide(guides[0])
+            <div className="flex items-center justify-around space-x-4 mt-6">
+                {guides ? (
+                    guides.map(guide => renderGuide(guide))
                 ) : (
                     <p className="text-sm text-gray-500">No guide information available.</p>
                 )}

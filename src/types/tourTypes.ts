@@ -67,7 +67,7 @@ export interface CreateTourType {
         _id?: string;
         id?: string;
     }>;
-    guides: string[];
+    guides: Array<{email: string}>;
     slug: string;
     discount?: number;
     reviews: ReviewType[];

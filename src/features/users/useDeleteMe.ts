@@ -17,8 +17,8 @@ export const useDeleteMe = () => {
             queryClient.removeQueries()
             toast.success('Your account is deleted successfully')
         },
-        onError: () => {
-            toast.error('Error in deleting your account')
+        onError: (error: {reponse: {data: {message: string}}}) => {
+            toast.error(`Error in deleting your account ${error.reponse.data.message}`)
         }
     })
 

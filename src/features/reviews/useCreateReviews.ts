@@ -11,9 +11,8 @@ export const useCreateReviews = () => {
             toast.success('Your review is added successfully')
             return data
         },
-        onError: error => {
-            toast.error('Failed to add review')
-            throw error
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Failed to add review ${error.response.data.message}`)
         }
     })
 

@@ -14,8 +14,8 @@ export const useCreateUser = () => {
                 queryKey: ['all-users']
             })
         },
-        onError: () => {
-            toast.error('Error in creating this user')
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Error in creating this user ${error.response.data.message}`)
         }
     })
     return { createUser, isPending }

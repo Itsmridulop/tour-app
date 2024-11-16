@@ -15,8 +15,8 @@ export const useCreateTour = () => {
                 queryKey: ['tours']
             })
         },
-        onError: (error) => {
-            toast.error(`Error adding tour: ${error.message}`)
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Error adding tour: ${error.response.data.message}`)
         }
     })
     return { createTour, isPending }

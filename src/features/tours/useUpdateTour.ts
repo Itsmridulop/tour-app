@@ -15,8 +15,8 @@ export const useUpdateTour = () => {
             })
             toast.success('Tour is updated successfully')
         },
-        onError: (error) => {
-            toast.error(`Failed to update tour: ${error.message}`)
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Failed to update tour: ${error.response.data.message}`)
         }
     })
 

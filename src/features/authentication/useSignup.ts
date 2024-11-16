@@ -17,9 +17,8 @@ const useSignup = () => {
             })
             toast.success('Signup successfully')
         },
-        onError: error => {
-            toast.error(error.message)
-            console.error(error)
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Signup failed: ${error.response.data.message}`)
         }
     })
     return { signup, isPending }

@@ -17,9 +17,8 @@ const useLogin = () => {
                 replace: true
             })
         },
-        onError: error => {
-            console.error("error")
-            toast.error(error.message)
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Unalbe to login: ${error.response.data.message}`)
         }
     })
     return { login, isPending }

@@ -11,8 +11,8 @@ export const useImageUpload = () => {
             queryClient.invalidateQueries({ queryKey: ['tour'] })
             toast.success('Images are uploaded successfully')
         },
-        onError: () => {
-            toast.error('Error in uploading images')
+        onError: (error: {response: {data: {message: string}}}) => {
+            toast.error(`Error in uploading images ${error.response.data.message}`)
         }
     })
     return { imageUpload, isPending }

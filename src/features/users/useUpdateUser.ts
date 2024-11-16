@@ -13,8 +13,8 @@ export const useUpdateUser = () => {
             })
             toast.success('User data is updated successfully')
         },
-        onError: () => {
-            toast.error('Failed to update user data')
+        onError: (error: {reponse: {data: {message: string}}}) => {
+            toast.error(`Failed to update user data: ${error.reponse.data.message}`)
         }
     })
 

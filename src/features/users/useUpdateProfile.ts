@@ -13,9 +13,8 @@ export const useUpdateProfile = () => {
             })
             toast.success('Your profile is updated successfully')
         },
-        onError: error => {
-            console.error(error)
-            toast.error(error.message)
+        onError: (error: {reponse: {data: {message: string}}}) => {
+            toast.error(`Unable to update your profile: ${error.reponse.data.message}`)
         }
     })
     return { updateProfile, isPending }

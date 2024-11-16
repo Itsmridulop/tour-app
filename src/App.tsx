@@ -100,7 +100,8 @@ function App() {
               maxWidth: '500px',
               padding: '16px 24px',
               backgroundColor: '#b7b7b7',
-              color: '#303030'
+              color: '#303030',
+              zIndex: 10000
             }
           }
         }

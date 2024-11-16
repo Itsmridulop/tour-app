@@ -10,8 +10,8 @@ export const useCreateBooking = () => {
         onSuccess: () => {
             toast.success('Booking is created successfully')
         },
-        onError: () => {
-            toast.error('Unable to create booking')
+        onError: (error: {reponse: {data: {message: string}}}) => {
+            toast.error(`Unable to create booking ${error.reponse.data.message}`)
         }
     })
     return { createBooking, isPending }
