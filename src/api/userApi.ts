@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { auth } from "./authApi";
-import { CreateUserType, ResponseType, UserDataType } from "../types/userType";
+import { ResponseType, UserDataType } from "../types/userType";
 
 class User {
     private api: AxiosInstance
@@ -87,11 +87,12 @@ class User {
         }
     }
 
-    public async updateUser({ userData, id }: { userData: Partial<CreateUserType>, id?: string }): Promise<ResponseType> {
+    public async updateUser({ formData, id }: { formData: FormData, id?: string }): Promise<ResponseType> {
         try {
-            const response: AxiosResponse<ResponseType> = await this.api.patch(`/${id}`, userData, {
+            const response: AxiosResponse<ResponseType> = await this.api.patch(`/${id}`, formData, {
                 headers: {
-                    'Authorization': `Bearer ${auth.gettoken()}`
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             })
             return response.data

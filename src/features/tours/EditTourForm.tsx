@@ -15,23 +15,23 @@ import { useParams } from 'react-router-dom'
 import { fetchLocation } from '@/utils/fetchLocation'
 import { useAlert } from '@/component/Alert'
 import { UseMutateFunction } from '@tanstack/react-query'
-import { FormDataController } from '@/utils/FormDataController'
 
-import TourImagesUpload from './TourImageUploader'
+// import TourImagesUpload from './TourImageUploader'
 import TourStartDatesUpload from './TourStartDateUpload'
 
 interface TourEditFormProps {
     tour?: TourType;
     updationFn: UseMutateFunction<TourResponse, Error, {
-        formData: FormData;
+        tourData: CreateTourType;
         id?: string;
     }, unknown>
     onClose?: () => void;
-    title: string
+    title: string;
+    isPending: boolean
 }
 
-const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title }) => {
-    const [images, setImages] = useState<(string | File)[] | undefined>(tour?.images)
+const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title, isPending }) => {
+    // const [images, setImages] = useState<(string | File)[] | undefined>(tour?.images)
     const [startDate, setStartDate] = useState<string[] | undefined>(tour?.startDates)
     const [isLoading, setIsLoading] = useState(false)
 
@@ -98,18 +98,15 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
 
         const tourData: CreateTourType = {
             ...data,
-            images: images,
             discount: data.discount && data.discount * 1,
             locations: [...locationObj || []],
             startDates: [...startDate || []],
             startLocation: { ...startLocaationObj }
         };
-        const formData = FormDataController(tourData);
         setIsLoading(false)
-        formData.forEach(ele => console.log(ele))
-        onClose?.()
-        updationFn({ formData, id }, {
-            onSettled: () => reset()
+        updationFn({ tourData, id }, {
+            onSettled: () => reset(),
+            onSuccess: () => onClose?.()
         });
     };
 
@@ -380,7 +377,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                                                 />
                                                 {errors.imageCover && <p className="text-red-500">{errors.imageCover.message}</p>}
                                             </div>
-                                            <TourImagesUpload control={control} imagesArr={images} setter={setImages} />
+                                            {/* <TourImagesUpload control={control} imagesArr={images} setter={setImages} /> */}
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="dates" className="mt-0 data-[state=active]:flex data-[state=active]:items-center data-[state=active]:justify-center h-full">
@@ -530,7 +527,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title 
                     </Tabs>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                    <Button type="submit" className="bg-green-500 hover:bg-green-600" disabled={isLoading}>{isLoading ? 'Verifing Data...' : 'Save Changes'}</Button>
+                    <Button type="submit" className="bg-green-500 hover:bg-green-600" disabled={isLoading || isPending}>{isLoading ? 'Verifing Data...' : isPending ? 'Uploading Data...' : 'Save Changes'}</Button>
                 </CardFooter>
             </Card>
         </form>

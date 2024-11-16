@@ -1,38 +1,53 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { Controller, Control } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Label } from "../../component/Label"
 import { Input } from "../../component/Input"
 import { Button } from "../../component/Button"
 import { MinusCircledIcon, PlusCircledIcon } from '@radix-ui/react-icons'
-import { CreateTourType } from '@/types/tourTypes';
+import { useState } from 'react';
+import { FormDataController } from '@/utils/FormDataController';
+import { useParams } from 'react-router-dom';
+import { useImageUpload } from './useImageUpload';
 
 interface TourImagesUploadProps {
-    control: Control<CreateTourType>;
-    imagesArr?: (File | string)[]; 
-    setter: Dispatch<SetStateAction<(string | File)[] | undefined>>
+    imagesArr?: (File | string)[];
+    onClose?: () => void
 }
 
-const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr, setter }) => {
+const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ imagesArr, onClose }) => {
+    const [images, setImages] = useState<(string | File)[] | undefined>(imagesArr);
+    const { id } = useParams()
+    const { imageUpload, isPending } = useImageUpload()
+    const { handleSubmit, reset, control } = useForm()
 
     const handleImageChange = (index: number, file: File | string) => {
-        const updatedImages = [...imagesArr || []];
+        const updatedImages = [...images || []];
         updatedImages[index] = file;
-        setter(updatedImages);
+        setImages(updatedImages);
     };
 
     const handleDeleteImage = (index: number) => {
-        const updatedImages = imagesArr?.filter((_, i) => i !== index);
-        setter(updatedImages);
+        const updatedImages = images?.filter((_, i) => i !== index);
+        setImages(updatedImages);
     };
 
     const handleAddImage = () => {
-        setter([...imagesArr || [], new File([], '')]); 
+        setImages([...images || [], new File([], '')]);
     };
 
+    const submitHandler = () => {
+        const data = { images }
+        const formData = FormDataController(data)
+        imageUpload({ formData, id }, {
+            onSettled: () => reset(),
+            onSuccess: () => onClose?.()
+        })
+
+    }
+
     return (
-        <div className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(submitHandler)}>
             <Label>Tour Images</Label>
-            {imagesArr?.map((image, index) => (
+            {images?.map((image, index) => (
                 <div key={index} className="flex items-center space-x-4">
                     <Controller
                         name={`images.${index}`}
@@ -46,7 +61,7 @@ const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr,
                                         onChange={(e) => {
                                             if (e.target.files) {
                                                 const file = e.target.files[0];
-                                                handleImageChange(index, file); 
+                                                handleImageChange(index, file);
                                             }
                                         }}
                                         className="border rounded-md p-2"
@@ -64,7 +79,7 @@ const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr,
                                     type="button"
                                     variant="outline"
                                     size="icon"
-                                    onClick={() => handleDeleteImage(index)} 
+                                    onClick={() => handleDeleteImage(index)}
                                 >
                                     <MinusCircledIcon className="h-4 w-4" />
                                 </Button>
@@ -77,13 +92,14 @@ const TourImagesUpload: React.FC<TourImagesUploadProps> = ({ control, imagesArr,
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={handleAddImage} 
+                onClick={handleAddImage}
                 className="flex items-center space-x-2"
             >
                 <PlusCircledIcon className="h-4 w-4" />
                 <span>Add Image</span>
             </Button>
-        </div>
+            <Button type="submit" className="bg-green-500 hover:bg-green-600" disabled={isPending}>{isPending ? 'Uploading Images...' : 'Upload Images'}</Button>
+        </form>
     );
 };
 

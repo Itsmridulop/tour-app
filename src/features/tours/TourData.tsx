@@ -21,6 +21,7 @@ import Modal from "@/component/Modal";
 import EditTourForm from "./EditTourForm";
 import AddReviewForm from "../reviews/AddReviewForm";
 import CreateBookingForm from "../bookings/CreateBookingForm.";
+import TourImagesUpload from "./TourImageUploader";
 
 L.Icon.Default.mergeOptions({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -67,7 +68,7 @@ export default function TourData() {
         deleteReview({ reviewId: reviewId || '', tourId: tourId || '' });
     };
 
-    if (isLoading || isUpdating) return <Spinner />
+    if (isLoading) return <Spinner />
 
     const position: [number, number] = [tourData?.data.startLocation.coordinates?.[1] ?? 0, tourData?.data.startLocation.coordinates?.[0] ?? 0];
 
@@ -148,7 +149,7 @@ export default function TourData() {
                                 className="transition-transform duration-300 hover:scale-110"
                             />
                         )}
-                    />}
+                    ><TourImagesUpload imagesArr={tourData?.data.images}/></Images>}
 
                     <Guides
                         guides={tourData?.data.guides}
@@ -213,7 +214,7 @@ export default function TourData() {
                                     </button>
                                 </Modal.Open>
                                 <Modal.Window name="updateTour">
-                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: " />
+                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: " isPending={isUpdating}/>
                                 </Modal.Window>
                             </Modal>
                                 <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>

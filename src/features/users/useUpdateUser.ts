@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { user } from "../../api/userApi"
-import { CreateUserType } from "../../types/userType"
 
 import toast from "react-hot-toast"
 
 export const useUpdateUser = () => {
     const queryClient = useQueryClient()
     const { mutate: updateUser, isPending } = useMutation({
-        mutationFn: ({ userData, id }: { userData: Partial<CreateUserType>; id?: string }) => user.updateUser({ userData, id }),
+        mutationFn: ({ formData, id }: { formData: FormData; id?: string }) => user.updateUser({ formData, id }),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["last-user"]

@@ -52,7 +52,7 @@ class Tour {
         }
     }
 
-    public async updateTour(tourData: FormData, id?: string): Promise<TourResponse> {
+    public async updateTour(tourData: CreateTourType, id?: string): Promise<TourResponse> {
         try {
             const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, tourData, {
                 headers: {
@@ -109,6 +109,21 @@ class Tour {
             return response.data
         } catch (error) {
             console.error('Error in getting monthly plan', error)
+            throw error
+        }
+    }
+
+    public async imageUpload(data: FormData, id?: string): Promise<TourResponse> {
+        try {
+            const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, data, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in uploading images')
             throw error
         }
     }

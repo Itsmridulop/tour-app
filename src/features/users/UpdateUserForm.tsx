@@ -1,17 +1,20 @@
-import { useForm } from "react-hook-form"
-import { CreateUserType, UserDataType, } from "../../types/userType"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { UserDataType, } from "../../types/userType"
 import { useUpdateUser } from "./useUpdateUser";
-import { parsePhoto } from "../../utils/parsePhoto";
+import { FormDataController } from "@/utils/FormDataController";
 
 function UpdateUserForm({ user, id, onClose }: { user?: UserDataType; id?: string; onClose?: () => void }) {
     const { register, reset, handleSubmit, formState: { errors } } = useForm<UserDataType>()
-    const { updateUser } = useUpdateUser()
+    const { updateUser, isPending } = useUpdateUser()
 
-    const submitHandler = (data: Partial<CreateUserType>) => {
+    const submitHandler: SubmitHandler<UserDataType> = (data) => {
         if (data.name === user?.name && (!data.photo || (typeof data.photo !== 'string' && Object.keys(data.photo).length === 0))) return;
-        const photoName = parsePhoto(data)
-        const userData = { ...data, photo: photoName }
-        updateUser({ userData, id }, {
+        const userData = {
+            ...data,
+            photo: data.photo[0]
+        }
+        const formData = FormDataController(userData)
+        updateUser({ formData, id }, {
             onSettled: () => reset(),
             onSuccess: () => onClose?.()
         })
@@ -72,8 +75,9 @@ function UpdateUserForm({ user, id, onClose }: { user?: UserDataType; id?: strin
                 <button
                     type="submit"
                     className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-200"
+                    disabled={isPending}
                 >
-                    Update Profile
+                    {isPending ? 'Updating...' : 'Update Profile'}
                 </button>
             </form>
         </div>
