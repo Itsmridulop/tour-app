@@ -30,7 +30,7 @@ export default function CreateBookingForm({ onClose }: { onClose?: () => void })
   const onSubmit: SubmitHandler<FormInputs> = (data) => {
     if (tour) {
       if (data.members > tour?.data?.maxGroupSize) showAlert('Members should be lesser then group size.')
-      createBooking({ members: data.members, tourId: id }, {
+      createBooking({ members: data.members,paymentMethod: data.paymentMethod, tourId: id }, {
         onSuccess: () => onClose?.(),
         onSettled: () => reset()
       })

@@ -7,6 +7,7 @@ import { useDeleteUser } from "./useDeleteUser"
 import Spinner from "../../component/Spinner"
 import Modal from "../../component/Modal"
 import UpdateUserForm from "./UpdateUserForm"
+import UserActicityPage from "./UserActivityPage"
 
 function UserData() {
     const { id } = useParams()
@@ -68,6 +69,7 @@ function UserData() {
                         </span>
                     </div>
                 </div>
+                {(userInfo?.data.role === 'user' && id) && <UserActicityPage id={id}/>}
             </div>
         </div>
     )

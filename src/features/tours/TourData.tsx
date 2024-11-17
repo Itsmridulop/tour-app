@@ -46,7 +46,7 @@ export default function TourData() {
     const { deleteTour, isPending } = useDeleteTour()
     const { deleteReview } = useDeleteReview()
     const [review, setReview] = useState<(TourReviewType | ReviewType)[] | undefined>(tourData?.data.reviews ?? [])
-
+console.log(review)
     const handleReviewChange = (reviewData: ReviewType) => {
         setReview((prevReviews) => {
             const currentReviews = prevReviews || [];
@@ -154,7 +154,7 @@ export default function TourData() {
                     <Guides
                         guides={tourData?.data.guides}
                         renderGuide={(guide: UserDataType) => (
-                            <div className="flex space-x-4">
+                            <div key={guide.email} className="flex space-x-4">
                                 <img
                                     src={`${guide.photo ?? '/src/public/img/users/default.jpg'}`}
                                     alt={guide.name}

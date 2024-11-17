@@ -1,9 +1,11 @@
+import { UserDataType } from "./userType";
+
 export interface ReviewType {
     rating: number;
     _id?: string
     review: string;
     createdAt?: string;
- user?: {_id: string};
+    user?: { _id: string };
     tourId?: string
 }
 
@@ -25,9 +27,12 @@ export interface ReviewReturnType {
     data: {
         rating: number;
         review: string;
-        user: string;
-        tour: string;
+        user: UserDataType | string;
+        tour: {
+            name: string,
+            guide: UserDataType[] | string[],
+        } | string;
         createdAt: string;
         id: string
-    }
+    }[]
 }

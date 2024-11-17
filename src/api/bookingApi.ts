@@ -1,4 +1,4 @@
-import { CreateBookingType, ReponseBookingType } from "@/types/bookingType";
+import { CreateBookingType, ResponseBookingType } from "@/types/bookingType";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { auth } from "./authApi";
 
@@ -13,10 +13,52 @@ class Booking {
         })
     }
 
-    public async createBooking(bookingData: CreateBookingType): Promise<ReponseBookingType> {
+    public async createBooking(bookingData: CreateBookingType): Promise<ResponseBookingType> {
         console.log(bookingData)
         try {
-            const response: AxiosResponse<ReponseBookingType> = await this.api.post('/', { members: bookingData.members, tour: bookingData.tourId }, {
+            const response: AxiosResponse<ResponseBookingType> = await this.api.post('/', { members: bookingData.members, tour: bookingData.tourId, paymentMethod: bookingData.paymentMethod }, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    public async getBookingOfCurrentUser(): Promise<ResponseBookingType> {
+        try {
+            const response: AxiosResponse<ResponseBookingType> = await this.api.get('/user', {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    public async getBookingOfUser(id: string): Promise<ResponseBookingType> {
+        try {
+            const response: AxiosResponse<ResponseBookingType> = await this.api.get(`/user/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+
+    public async updateBooking(bookingData: Partial<CreateBookingType>, id: string): Promise<ResponseBookingType> {
+        try {
+            const response: AxiosResponse<ResponseBookingType> = await this.api.patch(`/${id}`, bookingData, {
                 headers: {
                     'Authorization': `Bearer ${auth.gettoken()}`
                 }

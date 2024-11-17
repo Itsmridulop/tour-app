@@ -55,7 +55,20 @@ class Review {
             console.error('Error in updating your review', error)
             throw error
         }
+    }
 
+    public async getReviewOfUser(id: string): Promise<ReviewReturnType> {
+        try {
+            const response: AxiosResponse<ReviewReturnType> = await this.api.get(`/reviews/user/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
     }
 }
 

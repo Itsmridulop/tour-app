@@ -20,7 +20,7 @@ import TourStartDatesUpload from './TourStartDateUpload'
 
 interface TourEditFormProps {
     tour?: TourType;
-    updationFn: UseMutateFunction<TourResponse, Error, {
+    updationFn: UseMutateFunction<TourResponse, {response: { data: { message: string; }; }; }, {
         tourData: CreateTourType;
         id?: string;
     }, unknown>
@@ -75,6 +75,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
             }));
         } catch {
             showAlert('Error is getting corrdinates of some locations')
+            setIsLoading(false)
             return
         }
         let startLocationCoord
@@ -82,6 +83,7 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
             startLocationCoord = await fetchLocation(data?.startLocation.address)
         } catch {
             showAlert('Error in getting coordinates of start location')
+            setIsLoading(false)
             return
         }
 
