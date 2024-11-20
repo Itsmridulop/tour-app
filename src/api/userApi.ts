@@ -16,7 +16,6 @@ class User {
                 headers: {
                     'Authorization': `Bearer ${auth.gettoken()}`,
                     'Content-Type': 'Application/json',
-
                 }
             })
             return response.data
@@ -62,7 +61,6 @@ class User {
                 headers: {
                     'Authorization': `Bearer ${auth.gettoken()}`,
                     'Content-Type': 'Application/json',
-
                 }
             })
             return response.data
@@ -78,7 +76,6 @@ class User {
                 headers: {
                     'Authorization': `Bearer ${auth.gettoken()}`,
                     'Content-Type': 'Application/json',
-
                 }
             })
         } catch (error) {
@@ -98,6 +95,22 @@ class User {
             return response.data
         } catch (error) {
             console.error('Error in updating this user', error)
+            throw error
+        }
+    }
+
+    public async getAssociatedTour(id: string): Promise<ResponseType> {
+        // console.log(id)
+        try {
+            const response: AxiosResponse<ResponseType> = await this.api.get(`/associatedTour/${id}`, {
+                headers: {
+                    'Authorization': `Bearer ${auth.gettoken()}`,
+                    'Content-Type': 'Application/json',
+                }
+            })
+            return response.data
+        } catch (error) {
+            console.error('Error in getting associated tour', error)
             throw error
         }
     }

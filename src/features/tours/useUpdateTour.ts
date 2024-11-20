@@ -8,7 +8,7 @@ export const useUpdateTour = () => {
     const queryClient = useQueryClient()
 
     const { mutate: updateTour, isPending } = useMutation({
-        mutationFn: ({ tourData, id }: { tourData: CreateTourType, id?: string }) => tour.updateTour(tourData, id),
+        mutationFn: ({ tourData, id }: { tourData: Partial<CreateTourType>, id?: string }) => tour.updateTour(tourData, id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['tour']

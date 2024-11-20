@@ -8,6 +8,7 @@ import Spinner from "../../component/Spinner"
 import Modal from "../../component/Modal"
 import UpdateUserForm from "./UpdateUserForm"
 import UserActicityPage from "./UserActivityPage"
+import GuideActivityPage from "./GuideActivityPage"
 
 function UserData() {
     const { id } = useParams()
@@ -70,6 +71,7 @@ function UserData() {
                     </div>
                 </div>
                 {(userInfo?.data.role === 'user' && id) && <UserActicityPage id={id}/>}
+                {((userInfo?.data.role === 'guide' || userInfo?.data.role === 'lead-guide') && id) && <GuideActivityPage id={id} email={userInfo.data.email}/>}
             </div>
         </div>
     )

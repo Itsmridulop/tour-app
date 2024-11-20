@@ -46,7 +46,7 @@ export default function TourData() {
     const { deleteTour, isPending } = useDeleteTour()
     const { deleteReview } = useDeleteReview()
     const [review, setReview] = useState<(TourReviewType | ReviewType)[] | undefined>(tourData?.data.reviews ?? [])
-console.log(review)
+
     const handleReviewChange = (reviewData: ReviewType) => {
         setReview((prevReviews) => {
             const currentReviews = prevReviews || [];

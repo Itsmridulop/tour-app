@@ -106,8 +106,6 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
             startLocation: { ...startLocaationObj }
         };
         setIsLoading(false)
-        console.log(data)
-        console.log(tourData)
         updationFn({ tourData, id }, {
             onSettled: () => reset(),
             onSuccess: () => onClose?.()

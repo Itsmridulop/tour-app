@@ -52,7 +52,7 @@ class Tour {
         }
     }
 
-    public async updateTour(tourData: CreateTourType, id?: string): Promise<TourResponse> {
+    public async updateTour(tourData: Partial<CreateTourType>, id?: string): Promise<TourResponse> {
         try {
             const response: AxiosResponse<TourResponse> = await this.api.patch(`/${id}`, tourData, {
                 headers: {
@@ -68,7 +68,6 @@ class Tour {
     }
 
     public async createTour(tourData: CreateTourType): Promise<TourResponse> {
-        
         try {
             const response: AxiosResponse<TourResponse> = await this.api.post('/', tourData, {
                 headers: {
