@@ -1,37 +1,27 @@
 import { useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/component/Avatar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/component/Card"
 import { Button } from "@/component/Button"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/component/Dialog"
-import { FaEdit, FaTrashAlt, FaPlus, FaUserEdit, FaKey, FaUserTimes } from 'react-icons/fa'
+import { FaUserEdit, FaKey, FaUserTimes } from 'react-icons/fa'
 import { useUser } from './useUser'
 import { useDeleteMe } from './useDeleteMe'
-import { useTours } from '../tours/useTours'
-import { useUpdateTour } from '../tours/useUpdateTour'
-import { useCreateTour } from '../tours/useCreateTour'
-import { useDeleteTour } from '../tours/useDeleteTour'
 
+import GuideActivityPage from "./GuideActivityPage";
 import Spinner from '@/component/Spinner'
 import Modal from '@/component/Modal'
 import UpdateProfileForm from './UpdateProfileForm'
 import UpdatePasswordForm from './UpdatePasswordForm'
-import TourEditForm from '../tours/EditTourForm'
-import Stats from '../tours/Stats'
-import Siderbar from '@/component/Siderbar'
+import AdminProfile from './AdminProfile'
+import UserProfile from './UserProfile'
+import LeadGuideProfile from './LeadGuideProfile'
 
 export default function Component() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
 
     const { user, isLoading } = useUser()
-    const { tours: sampleTours, isLoading: isTourLoading } = useTours("sort=price", false)
     const { deleteMe, isPending } = useDeleteMe()
-    const { createTour, isPending: isCreating } = useCreateTour()
-    const { deleteTour, isPending: isDeleting } = useDeleteTour()
-    const { updateTour, isPending: isUpdating } = useUpdateTour()
 
-
-
-    if (isLoading || isTourLoading || isCreating || isDeleting || isUpdating) return <Spinner />
+    if (isLoading) return <Spinner />
 
     return (
         <div className="container mx-auto p-6">
@@ -93,71 +83,9 @@ export default function Component() {
                 </div>
             </div>
 
-            {
-                user?.data.role === "admin" &&
-                <>
-                    <div className='flex'>
-
-                        <Siderbar />
-
-                    </div>
-                    <div className='flex-1 p-4'>
-
-                        <Stats />
-
-                        <h2 className="text-xl font-semibold mb-4">Manage Tours</h2>
-
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Your Tours</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4 h-96 overflow-scroll">
-                                    {sampleTours?.data.map((tour) => (
-                                        <div key={tour.id} className="flex items-center  justify-between p-4 bg-gray-100 rounded-lg">
-                                            <div>
-                                                <h3 className="font-semibold">{tour.name}</h3>
-                                                <p className="text-sm text-gray-600">
-                                                    {tour.duration} | Difficulty: {tour.difficulty}
-                                                </p>
-                                                <p className="text-sm font-medium">${tour.price}</p>
-                                            </div>
-                                            <div className="flex space-x-2">
-                                                <Modal>
-                                                    <Modal.Open opens='updateTour'>
-                                                        <Button variant="ghost" size="sm" >
-                                                            <FaEdit className="h-4 w-4" />
-                                                        </Button>
-                                                    </Modal.Open>
-                                                    <Modal.Window name="updateTour">
-                                                        <TourEditForm tour={tour} updationFn={updateTour} title='Edit Tour' />
-                                                    </Modal.Window>
-                                                </Modal>
-                                                <Button variant="ghost" size="sm">
-                                                    <FaTrashAlt className="h-4 w-4" onClick={() => deleteTour(tour._id)} />
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="mt-6">
-                                    <Modal>
-                                        <Modal.Open opens='createTour'>
-                                            <Button>
-                                                <FaPlus className="h-4 w-4 mr-2" />
-                                                Add New Tour
-                                            </Button>
-                                        </Modal.Open>
-                                        <Modal.Window name="createTour">
-                                            <TourEditForm updationFn={createTour} title='Create Tour' />
-                                        </Modal.Window>
-                                    </Modal>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </>
-            }
+            {user?.data.role === "admin" && <AdminProfile />}
+            {user?.data.role === 'lead-guide' && <LeadGuideProfile ><GuideActivityPage id={`${user.data._id}`} email={user.data.email}/></LeadGuideProfile>}
+            {user?.data.role === 'user' && <UserProfile />}
         </div>
     )
 }

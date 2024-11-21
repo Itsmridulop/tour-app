@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
-// import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from "@/component/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/component/Card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/component/Select"
@@ -8,9 +7,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BookingDataType } from '@/types/bookingType'
 import { useBookingOfUser } from '../bookings/useBookingOfUser'
 import { useUpdateBooking } from '../bookings/useUpdateBooking'
+import { useReviewOfUser } from '../reviews/useReviewOfUser'
 
 import Spinner from '@/component/Spinner'
-import { useReviewOfUser } from '../reviews/useReviewOfUser'
 
 
 const pieChartColors = ['#2ecc71', '#27ae60', '#229954', '#1e8449', '#196f3d']
@@ -30,7 +29,6 @@ export default function UserActivityPage({ id }: { id: string }) {
 
   const bookingStats = useMemo(() => {
     const stats = bookings.reduce((acc, booking) => {
-      console.log(booking, acc)
       acc[booking.status] = (acc[booking.status] || 0) + 1
       return acc
     }, {} as Record<BookingDataType['status'], number>)
@@ -41,11 +39,13 @@ export default function UserActivityPage({ id }: { id: string }) {
     const updatedBookings = bookings.map(booking =>
       booking._id === bookingId ? { ...booking, status: newStatus } : booking
     )
-    setBookings(updatedBookings)
+
     updateBooking({
       bookingData: {
         status: newStatus
       }, id: bookingId
+    }, {
+      onSuccess: () => setBookings(updatedBookings)
     })
   }
 
@@ -53,11 +53,12 @@ export default function UserActivityPage({ id }: { id: string }) {
     const updatedBookings = bookings.map(booking =>
       booking._id === `${bookingId}` ? { ...booking, status: 'canceled', canceledAt: new Date(Date.now()) } : booking
     )
-    setBookings(updatedBookings)
     updateBooking({
       bookingData: {
         status: 'canceled'
       }, id: bookingId
+    }, {
+      onSuccess: () => setBookings(updatedBookings)
     })
   }
 
