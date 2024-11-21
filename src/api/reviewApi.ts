@@ -15,7 +15,7 @@ class Review {
 
     public async createReviews(reviewData: ReviewType): Promise<ReviewReturnType> {
         try {
-            const response: AxiosResponse<ReviewReturnType> = await this.api.post(`/tours/${reviewData.tourId}/reviews`, {
+            const response: AxiosResponse<ReviewReturnType> = await this.api.post(`/tours/${reviewData.tour}/reviews`, {
                 review: reviewData.review,
                 rating: reviewData.rating
             }, {

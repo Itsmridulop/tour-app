@@ -26,8 +26,6 @@ class Authenication {
   }
 
   public async login(userData: { email: string; password: string }): Promise<ResponseType> {
-    console.log(userData)
-
     try {
       const response: AxiosResponse<ResponseType> = await this.api.post("/login", userData, {
         headers: {

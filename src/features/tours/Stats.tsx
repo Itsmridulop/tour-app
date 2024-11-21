@@ -1,61 +1,82 @@
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/component/Card"
 import { useStats } from "./useStats"
-import { Card, CardContent, CardHeader, CardTitle } from "@/component/Card"
-import { FaStar } from "react-icons/fa"
 
 import Spinner from "@/component/Spinner"
 
-function Stats() {
-    const { stats, isLoading } = useStats()
+const COLORS = ['#FF6384', '#36A2EB', '#FFCE56'];
 
-    const difficultyOrder = ["easy", "medium", "difficult"]
-    const sortedData = stats?.data.sort((a, b) =>
-        difficultyOrder.indexOf(a._id) - difficultyOrder.indexOf(b._id)
-    )
-
-    if (isLoading) return <Spinner />
-
-    return (
-        <>
-            <h2 className="text-xl font-semibold mb-4">Tour Statistics</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {sortedData?.map((difficulty) => (
-                    <Card key={difficulty._id} className="overflow-hidden">
-                        <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600">
-                            <CardTitle className="text-white capitalize">{difficulty._id} Tours</CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-6">
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Average Rating</span>
-                                    <div className="flex items-center">
-                                        <FaStar className="w-5 h-5 text-yellow-400 fill-current mr-1" />
-                                        <span className="font-bold">{difficulty.avgRating.toFixed(1)}</span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Average Price</span>
-                                    <span className="font-bold">${difficulty.avgPrice.toFixed(2)}</span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Price Range</span>
-                                    <span className="font-bold">${difficulty.minPrice} - ${difficulty.maxPrice}</span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Number of Ratings</span>
-                                    <p>{difficulty.numRatings}</p>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium">Number of Tours</span>
-                                    <p>{difficulty.numTours}</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
+const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+        const data = payload[0].payload
+        return (
+            <div className="rounded-lg border bg-background p-2 shadow-sm">
+                <div className="grid gap-2">
+                    <div className="font-bold">{data.name}</div>
+                    <div className="grid grid-cols-2 gap-1">
+                        <span className="text-[0.70rem] uppercase text-muted-foreground">Number of Tours</span>
+                        <span>{data.value}</span>
+                        <span className="text-[0.70rem] uppercase text-muted-foreground">Average Rating</span>
+                        <span>{data.avgRating.toFixed(2)}</span>
+                        <span className="text-[0.70rem] uppercase text-muted-foreground">Average Price</span>
+                        <span>${data.avgPrice}</span>
+                        <span className="text-[0.70rem] uppercase text-muted-foreground">Number of Ratings</span>
+                        <span>{data.numRatings}</span>
+                        <span className="text-[0.70rem] uppercase text-muted-foreground">Price Range</span>
+                        <span>${data.minPrice} - ${data.maxPrice}</span>
+                    </div>
+                </div>
             </div>
-        </>
-    )
+        )
+    }
+    return null
 }
 
-export default Stats
+export default function Stats() {
+    const { stats, isLoading } = useStats()
+
+    const processedData = stats?.data.map(item => ({
+        name: item._id.charAt(0).toUpperCase() + item._id.slice(1),
+        value: item.numTours,
+        avgRating: item.avgRating,
+        avgPrice: Math.round(item.avgPrice),
+        numRatings: item.numRatings,
+        minPrice: item.minPrice,
+        maxPrice: item.maxPrice
+    }))
+
+    if(isLoading) return <Spinner/>
+    
+    return (
+        <Card className="w-full max-w-3xl">
+            <CardHeader>
+                <CardTitle>Tour Difficulty Distribution</CardTitle>
+                <CardDescription>Number of tours by difficulty level</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="h-[400px]">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                            <Pie
+                                data={processedData}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={false}
+                                outerRadius={150}
+                                fill="#8884d8"
+                                dataKey="value"
+                                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            >
+                                {processedData?.map((_, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Pie>
+                            <Tooltip content={<CustomTooltip />} />
+                            <Legend />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}

@@ -100,7 +100,6 @@ class User {
     }
 
     public async getAssociatedTour(id: string): Promise<ResponseType> {
-        // console.log(id)
         try {
             const response: AxiosResponse<ResponseType> = await this.api.get(`/associatedTour/${id}`, {
                 headers: {

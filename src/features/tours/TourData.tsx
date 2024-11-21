@@ -149,7 +149,7 @@ export default function TourData() {
                                 className="transition-transform duration-300 hover:scale-110"
                             />
                         )}
-                    ><TourImagesUpload imagesArr={tourData?.data.images}/></Images>}
+                    ><TourImagesUpload imagesArr={tourData?.data.images} /></Images>}
 
                     <Guides
                         guides={tourData?.data.guides}
@@ -214,7 +214,7 @@ export default function TourData() {
                                     </button>
                                 </Modal.Open>
                                 <Modal.Window name="updateTour">
-                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: " isPending={isUpdating}/>
+                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: " isPending={isUpdating} />
                                 </Modal.Window>
                             </Modal>
                                 <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
@@ -227,12 +227,13 @@ export default function TourData() {
                     </div>
                 </div>
             </div>
-            {user?.data.role !== "user" || <AddReviewForm onReviewChange={handleReviewChange} />}
+            {(user?.data.role !== "user" && !tourData?.data.reviews.map(review => review.user).includes({_id: `${user?.data._id}`})) || <AddReviewForm onReviewChange={handleReviewChange} />}
             <Reviews
-                reviews={review?.length === 0 ? tourData?.data.reviews : [...(review || []), ...(tourData?.data.reviews || [])]}
+                reviews={review?.length === 0 ? tourData?.data.reviews : tourData?.data.reviews.length !== 0 ? [...(review || []), ...(tourData?.data.reviews || [])] : []}
                 renderReview={(review: ReviewType[] | TourReviewType[]) => (
-                    review.map((reviewData, idx) =>
-                        <div key={idx} className="p-4 text-white">
+                    review.map((reviewData, idx) => {
+                        console.log(reviewData)
+                        return (<div key={idx} className="p-4 text-white">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">
                                     <FaStar className="text-yellow-500" />
@@ -252,8 +253,8 @@ export default function TourData() {
                             <p className="text-sm text-gray-500 mt-1">
                                 Reviewed on {new Date(reviewData.createdAt ?? Date.now()).toLocaleDateString()}
                             </p>
-                        </div>
-                    )
+                        </div>)
+                    })
                 )}
             />
         </div>

@@ -5,9 +5,7 @@ export function FormDataController<T extends object>(data: T): FormData {
         if (value instanceof File) {
             formData.append(key, value);
         } else if (Array.isArray(value)) {
-            console.log(key)
             value.forEach((item) => {
-                console.log(item)
                 formData.append(`${key}`, item)
             });
         } else if (typeof value === 'object' && value !== null) {

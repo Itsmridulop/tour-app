@@ -14,7 +14,6 @@ class Booking {
     }
 
     public async createBooking(bookingData: CreateBookingType): Promise<ResponseBookingType> {
-        console.log(bookingData)
         try {
             const response: AxiosResponse<ResponseBookingType> = await this.api.post('/', { members: bookingData.members, tour: bookingData.tourId, paymentMethod: bookingData.paymentMethod }, {
                 headers: {

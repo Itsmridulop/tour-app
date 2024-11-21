@@ -5,6 +5,8 @@ export interface CreateBookingType {
     paymentMethod: string,
     tourId?: string,
     status?: string,
+    canceledAt?: number,
+    paidAt?: Date,
     paid?: boolean
 }
 

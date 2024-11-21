@@ -6,7 +6,7 @@ export interface ReviewType {
     review: string;
     createdAt?: string;
     user?: { _id: string };
-    tourId?: string
+    tour?: string
 }
 
 export interface TourReviewType {

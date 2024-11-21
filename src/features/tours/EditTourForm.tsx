@@ -21,12 +21,12 @@ import TourStartDatesUpload from './TourStartDateUpload'
 interface TourEditFormProps {
     tour?: TourType;
     updationFn: UseMutateFunction<TourResponse, {response: { data: { message: string; }; }; }, {
-        tourData: CreateTourType;
+        tourData: Partial<CreateTourType> | CreateTourType;
         id?: string;
     }, unknown>
     onClose?: () => void;
     title: string;
-    isPending: boolean
+    isPending?: boolean
 }
 
 const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title, isPending }) => {

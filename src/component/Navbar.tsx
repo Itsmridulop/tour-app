@@ -5,10 +5,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ResponseType } from "@/types/userType";
 
 import AllUserLinkWapper from "./AllUserLinkWapper";
+import UserPhoto from "./UserPhoto";
 
 function Navbar() {
   const { logout } = useLogout();
-  
+
   const queryClient = useQueryClient();
   const user: ResponseType | undefined = queryClient.getQueryData(['user'])
   const isAuth = auth.isAuthenticated();
@@ -55,8 +56,9 @@ function Navbar() {
           to="/users"
           className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition"
         >
-          {(isAuth && user?.data.photo) && <img className="h-10 w-10 rounded-full" src={`${user?.data.photo || '/src/public/img/users/default.jpg'}`} alt="propifle photo" />}
-          {(!user?.data.photo && isAuth) && <img className="h-10 w-10 rounded-full" src={'/src/public/img/users/default.jpg'} alt="propifle photo" />}
+          {(isAuth) && <UserPhoto imgSrc={user?.data.photo || '/src/public/img/users/default.jpg'} />}
+          {/* {(isAuth && user?.data.photo) && <img className="h-10 w-10 rounded-full" src={`${user?.data.photo || '/src/public/img/users/default.jpg'}`} alt="propifle photo" />}
+          {(!user?.data.photo && isAuth) && <img className="h-10 w-10 rounded-full" src={'/src/public/img/users/default.jpg'} alt="propifle photo" />} */}
         </Link>
       </div>
     </nav>

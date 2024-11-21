@@ -28,8 +28,8 @@ export default function AddReviewForm({ onReviewChange }: { onReviewChange: (rev
             return
         }
 
-        createReview({ rating: data.rating * 1, review: data.review, tourId: id }, (data) => 
-            onReviewChange({rating: data.data.rating, review: data.data.review, _id: data.data.id})
+        createReview({ rating: data.rating * 1, review: data.review, tour: id }, (data) => 
+            onReviewChange({rating: data.data[0].rating, review: data.data[0].review, _id: data.data[0].id})
         )
         reset()
     }
