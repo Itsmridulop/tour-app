@@ -51,7 +51,7 @@ function Tour() {
                 </button>
                 <Filter onFilterChange={handleFilterChange} queryObj={queryStr} />
                 <Sort onSortChange={handleSortChange} queryObj={queryStr} />
-                {user?.data.role === 'admin' && <Modal>
+                {(user?.data.role === 'admin' || user?.data.role === 'lead-guide') && <Modal>
                     <Modal.Open opens="createTour">
                         <button
                             className="bg-green-600 text-white font-semibold py-2 px-4 rounded shadow-lg hover:bg-green-700 transition-colors"

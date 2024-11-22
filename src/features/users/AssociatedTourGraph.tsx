@@ -9,7 +9,7 @@ const data = [
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))"]
 
-export default function GuideTourDifficultyChart() {
+export default function AssociatedTourGraph() {
   return (
     <Card className="w-full max-w-lg">
       <CardHeader>

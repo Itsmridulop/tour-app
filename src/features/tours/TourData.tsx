@@ -206,7 +206,7 @@ export default function TourData() {
                                     <CreateBookingForm />
                                 </Modal.Window>
                             </Modal>
-                            {user?.data.role === 'admin' && <><Modal>
+                            {(user?.data.role === 'admin' || user?.data.role === 'lead-guide') && <><Modal>
                                 <Modal.Open opens="updateTour">
                                     <button className="flex items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
                                         <FaEdit className="mr-2" />

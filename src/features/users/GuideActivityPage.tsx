@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Button } from "@/component/Button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/component/Card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/component/Table"
@@ -15,14 +15,25 @@ import { FormDataController } from '@/utils/FormDataController'
 import { useTours } from '../tours/useTours'
 
 import Spinner from '@/component/Spinner'
+import AssociatedTourGraph from './AssociatedTourGraph'
+import NamedDisplay from '@/component/NamedDisplay'
 
-export default function GuideActivityPage({ id, email }: { id: string; email: string }) {
+export default function GuideActivityPage({ id, role, email }: { id: string; role: string; email: string }) {
     const { tours } = useTours("", false)
     const { associatedTours, isAssociatedToursLoading } = useAssociatedTour(id)
     const { updateUser } = useUpdateUser()
     const { updateTour } = useUpdateTour()
+  
     const [associatedToursArr, setAssociatedToursArr] = useState<(Tour | TourType)[] | undefined>(associatedTours?.data.tour)
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false)
+
+    const guideTourDifficultyStats = useMemo(() => {
+        const stats = associatedToursArr?.reduce((acc, associatedTour) => {
+            acc[associatedTour.difficulty] = (acc[associatedTour.difficulty] || 0) + 1
+            return acc
+          }, {} as Record<string, number>)
+          return Object.entries(stats ?? {}).map(([name, value]) => ({ name, value }))
+    }, [associatedToursArr])
 
     const handleRemoveFromTour = (tourId: string) => {
         const updatedTourArr = associatedTours?.data.tour?.filter(tour => tour._id !== tourId).map(tour => tour._id)
@@ -73,18 +84,22 @@ export default function GuideActivityPage({ id, email }: { id: string; email: st
         setAssociatedToursArr(associatedTours?.data.tour)
     }, [associatedTours])
 
-    if (isAssociatedToursLoading ) return <Spinner />
+    if (isAssociatedToursLoading) return <Spinner />
 
     return (
         <div className="container mx-auto p-6">
+            <CardHeader className="flex flex-row items-center justify-between">
+                <AssociatedTourGraph />
 
+                <Card className='w-full max-w-lg'><NamedDisplay data={guideTourDifficultyStats} title='Associated Tour Summary'/></Card>
+            </CardHeader>
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Associated Tours</CardTitle>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
+                        {role === 'admin' &&<DialogTrigger asChild>
                             <Button>Assign to New Tour</Button>
-                        </DialogTrigger>
+                        </DialogTrigger>}
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>Assign to New Tour</DialogTitle>
@@ -112,7 +127,7 @@ export default function GuideActivityPage({ id, email }: { id: string; email: st
                                 <TableHead>Duration</TableHead>
                                 <TableHead>Difficulty</TableHead>
                                 <TableHead>Price</TableHead>
-                                <TableHead>Actions</TableHead>
+                                {role === 'admin' && <TableHead>Actions</TableHead>}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -137,9 +152,9 @@ export default function GuideActivityPage({ id, email }: { id: string; email: st
                                         </Badge>
                                     </TableCell>
                                     <TableCell>${tour.price}</TableCell>
-                                    <TableCell>
+                                    {role === 'admin' && <TableCell>
                                         <Button variant="destructive" onClick={() => handleRemoveFromTour(tour._id)}>Remove</Button>
-                                    </TableCell>
+                                    </TableCell>}
                                 </TableRow>
                             ))}
                         </TableBody>

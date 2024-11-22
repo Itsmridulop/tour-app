@@ -31,7 +31,7 @@ function LeadGuideProfile({ children }: { children: ReactNode }) {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Your Tours</CardTitle>
+                        <CardTitle>All Tours</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4 h-96 overflow-scroll">

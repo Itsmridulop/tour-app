@@ -14,6 +14,7 @@ import UpdatePasswordForm from './UpdatePasswordForm'
 import AdminProfile from './AdminProfile'
 import UserProfile from './UserProfile'
 import LeadGuideProfile from './LeadGuideProfile'
+import GuideProfile from './GuideProfile'
 
 export default function Component() {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -84,8 +85,9 @@ export default function Component() {
             </div>
 
             {user?.data.role === "admin" && <AdminProfile />}
-            {user?.data.role === 'lead-guide' && <LeadGuideProfile ><GuideActivityPage id={`${user.data._id}`} email={user.data.email}/></LeadGuideProfile>}
+            {user?.data.role === 'lead-guide' && <LeadGuideProfile ><GuideActivityPage id={`${user.data._id}`} role={user.data.role} email={user.data.email}/></LeadGuideProfile>}
             {user?.data.role === 'user' && <UserProfile />}
+            {user?.data.role === 'guide' && <GuideProfile><GuideActivityPage role={user.data.role} id={`${user.data._id}`} email={user.data.email}/></GuideProfile>}
         </div>
     )
 }

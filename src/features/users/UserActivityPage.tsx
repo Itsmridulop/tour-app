@@ -10,6 +10,7 @@ import { useUpdateBooking } from '../bookings/useUpdateBooking'
 import { useReviewOfUser } from '../reviews/useReviewOfUser'
 
 import Spinner from '@/component/Spinner'
+import NamedDisplay from '@/component/NamedDisplay'
 
 
 const pieChartColors = ['#2ecc71', '#27ae60', '#229954', '#1e8449', '#196f3d']
@@ -70,19 +71,7 @@ export default function UserActivityPage({ id }: { id: string }) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
-          <CardHeader>
-            <CardTitle>Booking Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <dl className="grid grid-cols-2 gap-4">
-              {bookingStats.map(({ name, value }) => (
-                <div key={name} className="flex flex-col">
-                  <dt className="text-sm font-medium text-muted-foreground capitalize">{name}</dt>
-                  <dd className="text-2xl font-semibold">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </CardContent>
+          <NamedDisplay title='Booking Summary' data={bookingStats}/>
         </Card>
         <Card>
           <CardHeader>
