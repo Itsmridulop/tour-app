@@ -3,7 +3,6 @@ import { Star } from "lucide-react"
 import { Button } from "@/component/Button"
 import { Textarea } from "@/component/Textarea"
 import { Label } from "@/component/Label"
-import { useCreateReviews } from "./useCreateReviews"
 import { useParams } from "react-router-dom"
 import { ReviewType } from "@/types/ReviewType"
 
@@ -14,7 +13,6 @@ type FormValues = {
 
 export default function AddReviewForm({ onReviewChange }: { onReviewChange: (reviewData: ReviewType) => void }) {
     const { id } = useParams()
-    const { createReview } = useCreateReviews()
     const { handleSubmit, control, reset, setError, formState: { errors } } = useForm<FormValues>({
         defaultValues: {
             rating: 0,
@@ -28,9 +26,7 @@ export default function AddReviewForm({ onReviewChange }: { onReviewChange: (rev
             return
         }
 
-        createReview({ rating: data.rating * 1, review: data.review, tour: id }, (data) => 
-            onReviewChange({rating: data.data[0].rating, review: data.data[0].review, _id: data.data[0].id})
-        )
+        onReviewChange({ rating: data.rating, review: data.review, tour: id })
         reset()
     }
 

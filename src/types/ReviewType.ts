@@ -28,11 +28,8 @@ export interface ReviewReturnType {
         rating: number;
         review: string;
         user: UserDataType | string;
-        tour: {
-            name: string,
-            guide: UserDataType[] | string[],
-        } | string;
+        tour: string;
         createdAt: string;
-        id: string
-    }[]
+        _id: string
+    }
 }

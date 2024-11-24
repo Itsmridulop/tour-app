@@ -18,7 +18,7 @@ type FormInputs = {
   paymentMethod: 'credit-card' | 'UPI' | 'cash'
 }
 
-export default function CreateBookingForm({ onClose }: { onClose?: () => void }) {
+export default function CreateBookingForm({ onClose, onBooked }: { onBooked: (book:boolean) =>  void ,onClose?: () => void }) {
   const queryClient = useQueryClient()
   const tour: TourResponseType | undefined = queryClient.getQueryData(['tour'])
 
@@ -31,7 +31,10 @@ export default function CreateBookingForm({ onClose }: { onClose?: () => void })
     if (tour) {
       if (data.members > tour?.data?.maxGroupSize) showAlert('Members should be lesser then group size.')
       createBooking({ members: data.members,paymentMethod: data.paymentMethod, tourId: id }, {
-        onSuccess: () => onClose?.(),
+        onSuccess: () => {
+          onClose?.()
+          onBooked(true)
+        },
         onSettled: () => reset()
       })
     }

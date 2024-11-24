@@ -10,6 +10,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/component/Button";
 import { useDeleteReview } from "../reviews/useDeleteReview";
+import { useBookingOfUser } from "../bookings/useBookingOfUser";
+import { useCreateReviews } from "../reviews/useCreateReviews";
+// import { useUpdateReview } from "../reviews/useUpdateReview";
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -40,31 +43,21 @@ export default function TourData() {
     const queryClient = useQueryClient()
     const user: ResponseType | undefined = queryClient.getQueryData(['user'])
 
+    const { bookingData } = useBookingOfUser(`${user?.data._id}`)
     const { id } = useParams()
     const { updateTour, isPending: isUpdating } = useUpdateTour()
+    const { createReview } = useCreateReviews()
     const { tourData, isLoading } = useTour(id || "")
     const { deleteTour, isPending } = useDeleteTour()
     const { deleteReview } = useDeleteReview()
-    const [review, setReview] = useState<(TourReviewType | ReviewType)[] | undefined>(tourData?.data.reviews ?? [])
+    // const [isUpdated, setIsUpdated] = useState()
+    const [isBooked, setIsBooked] = useState<boolean>(false)
 
     const handleReviewChange = (reviewData: ReviewType) => {
-        setReview((prevReviews) => {
-            const currentReviews = prevReviews || [];
-            return [...currentReviews,
-            {
-                _id: reviewData._id,
-                rating: reviewData.rating,
-                review: reviewData.review,
-            }]
-        })
-    }
+        createReview(reviewData)
+    };
 
     const handleReviewDelete = ({ reviewId, tourId }: { tourId?: string; reviewId?: string }) => {
-        setReview((prevReviews) => {
-            const updatedReviews = prevReviews?.filter(review => review._id !== reviewId);
-            return updatedReviews;
-        });
-
         deleteReview({ reviewId: reviewId || '', tourId: tourId || '' });
     };
 
@@ -197,13 +190,13 @@ export default function TourData() {
                         <div className="flex space-x-4">
                             <Modal>
                                 <Modal.Open opens="bookTour">
-                                    <button className="flex items-center bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition transform hover:scale-105">
+                                    <button className={`flex bg-green-500 items-center  text-white font-bold py-2 px-4 rounded transition transform ${!(bookingData?.data.some(booking => typeof booking.tour === 'object' && booking.tour._id === id) || isBooked) ? 'hover:scale-105 hover:bg-green-700' : 'bg-green-900'}`} disabled={(bookingData?.data.some(booking => typeof booking.tour === 'object' && booking.tour._id === id) || isBooked)}>
                                         <FaPaperPlane className="mr-2" />
-                                        Book Now
+                                        {(bookingData?.data.some(booking => typeof booking.tour === 'object' && booking.tour._id === id) || isBooked) ? 'Booked' : 'Book Tour'}
                                     </button>
                                 </Modal.Open>
                                 <Modal.Window name="bookTour">
-                                    <CreateBookingForm />
+                                    <CreateBookingForm onBooked={setIsBooked} />
                                 </Modal.Window>
                             </Modal>
                             {(user?.data.role === 'admin' || user?.data.role === 'lead-guide') && <><Modal>
@@ -227,12 +220,13 @@ export default function TourData() {
                     </div>
                 </div>
             </div>
-            {(user?.data.role !== "user" && !tourData?.data.reviews.map(review => review.user).includes({_id: `${user?.data._id}`})) || <AddReviewForm onReviewChange={handleReviewChange} />}
+            <AddReviewForm onReviewChange={handleReviewChange}/>
             <Reviews
-                reviews={review?.length === 0 ? tourData?.data.reviews : tourData?.data.reviews.length !== 0 ? [...(review || []), ...(tourData?.data.reviews || [])] : []}
+                reviews={tourData?.data.reviews}
                 renderReview={(review: ReviewType[] | TourReviewType[]) => (
                     review.map((reviewData, idx) => {
-                        console.log(reviewData)
+                        if (reviewData.tour !== id) return null
+
                         return (<div key={idx} className="p-4 text-white">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center">
@@ -243,7 +237,7 @@ export default function TourData() {
                             <span className="mt-2 flex justify-between">{reviewData.review}
                                 <div className="flex space-x-2">
                                     {(!reviewData.user?._id || `${user?.data._id}` === reviewData.user._id) && <><Button variant="ghost" size="sm">
-                                        <FaEdit className="h-4 w-4 text-gray-500" />
+                                        <FaEdit className="h-4 w-4 text-gray-500" onClick={() => handleReviewChange(reviewData)}/>
                                     </Button>
                                         <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
                                             <FaTrashAlt className="h-4 w-4 text-gray-500" />

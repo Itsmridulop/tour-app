@@ -56,9 +56,8 @@ function Navbar() {
           to="/users"
           className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition"
         >
-          {(isAuth) && <UserPhoto imgSrc={user?.data.photo || '/src/public/img/users/default.jpg'} />}
-          {/* {(isAuth && user?.data.photo) && <img className="h-10 w-10 rounded-full" src={`${user?.data.photo || '/src/public/img/users/default.jpg'}`} alt="propifle photo" />}
-          {(!user?.data.photo && isAuth) && <img className="h-10 w-10 rounded-full" src={'/src/public/img/users/default.jpg'} alt="propifle photo" />} */}
+          {(isAuth && user?.data.photo) && <UserPhoto imgSrc={user.data.photo} />}
+          {(isAuth && !user?.data.photo) && <UserPhoto imgSrc={'src/public/img/users/default.jpg'} />}
         </Link>
       </div>
     </nav>

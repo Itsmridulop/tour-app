@@ -1,28 +1,21 @@
 import { review } from "@/api/reviewApi"
-import { ReviewReturnType, ReviewType } from "@/types/ReviewType"
-import { useMutation } from "@tanstack/react-query"
+import { ReviewType } from "@/types/ReviewType"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import toast from "react-hot-toast"
 
 export const useCreateReviews = () => {
+    const querClient = useQueryClient()
     const { mutate: createReview, isPending } = useMutation({
         mutationFn: (reviewData: ReviewType) => review.createReviews(reviewData),
-        onSuccess: (data) => {
+        onSuccess: () => {
             toast.success('Your review is added successfully')
-            return data
+            querClient.invalidateQueries({queryKey: ['tour']})
         },
         onError: (error: {response: {data: {message: string}}}) => {
             toast.error(`Failed to add review ${error.response.data.message}`)
         }
     })
 
-    const createReviewWithCallback = (reviewData: ReviewType, onSuccess?: (data: ReviewReturnType) => void) => {
-        createReview(reviewData,  {
-            onSuccess: (data) => {
-                if (onSuccess) onSuccess(data);
-            },
-        })
-
-    }
-    return { createReview: createReviewWithCallback, isPending }
+    return { createReview: createReview, isPending }
 }
