@@ -5,7 +5,7 @@ interface Location {
   type: string,
 }
 
-export interface Tour{
+export interface Tour {
   _id: string,
   name: string,
   startLocation: Location,
@@ -25,6 +25,7 @@ export interface UserDataType {
   photo: string;
   role: string;
   active: boolean,
+  reviewedIn: string[],
   tour?: Tour[]
 }
 

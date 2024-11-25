@@ -4,15 +4,16 @@ import { useDeleteTour } from "./useDeleteTour";
 import { useTour } from "./useTour";
 import { useParams } from "react-router-dom";
 import { ReviewType, TourReviewType } from "../../types/ReviewType";
-import { ResponseType, UserDataType } from "../../types/userType";
+import { UserDataType } from "../../types/userType";
 import { useUpdateTour } from "./useUpdateTour";
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/component/Button";
 import { useDeleteReview } from "../reviews/useDeleteReview";
 import { useBookingOfUser } from "../bookings/useBookingOfUser";
+import { FormDataController } from "@/utils/FormDataController";
+import { useUpdateProfile } from "../users/useUpdateProfile";
+import { useUser } from "../users/useUser";
 import { useCreateReviews } from "../reviews/useCreateReviews";
-// import { useUpdateReview } from "../reviews/useUpdateReview";
 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -40,24 +41,28 @@ const customMarkerIcon = new L.Icon({
 });
 
 export default function TourData() {
-    const queryClient = useQueryClient()
-    const user: ResponseType | undefined = queryClient.getQueryData(['user'])
-
+    const { user } = useUser()
     const { bookingData } = useBookingOfUser(`${user?.data._id}`)
     const { id } = useParams()
     const { updateTour, isPending: isUpdating } = useUpdateTour()
     const { createReview } = useCreateReviews()
     const { tourData, isLoading } = useTour(id || "")
+    const { updateProfile } = useUpdateProfile()
     const { deleteTour, isPending } = useDeleteTour()
     const { deleteReview } = useDeleteReview()
-    // const [isUpdated, setIsUpdated] = useState()
     const [isBooked, setIsBooked] = useState<boolean>(false)
 
     const handleReviewChange = (reviewData: ReviewType) => {
+        const reviewedIn = [...(user?.data.reviewedIn || []), id]
+        const data = FormDataController({ reviewedIn })
+        updateProfile(data)
         createReview(reviewData)
     };
 
     const handleReviewDelete = ({ reviewId, tourId }: { tourId?: string; reviewId?: string }) => {
+        const reviewedIn = user?.data.reviewedIn.filter(reviewInId => reviewInId !== id)
+        const data = FormDataController({ reviewedIn })
+        updateProfile(data)
         deleteReview({ reviewId: reviewId || '', tourId: tourId || '' });
     };
 
@@ -220,7 +225,7 @@ export default function TourData() {
                     </div>
                 </div>
             </div>
-            <AddReviewForm onReviewChange={handleReviewChange}/>
+            {!user?.data.reviewedIn.some(reviewInId => reviewInId === id) && <AddReviewForm onReviewChange={handleReviewChange} />}
             <Reviews
                 reviews={tourData?.data.reviews}
                 renderReview={(review: ReviewType[] | TourReviewType[]) => (
@@ -237,7 +242,7 @@ export default function TourData() {
                             <span className="mt-2 flex justify-between">{reviewData.review}
                                 <div className="flex space-x-2">
                                     {(!reviewData.user?._id || `${user?.data._id}` === reviewData.user._id) && <><Button variant="ghost" size="sm">
-                                        <FaEdit className="h-4 w-4 text-gray-500" onClick={() => handleReviewChange(reviewData)}/>
+                                        <FaEdit className="h-4 w-4 text-gray-500" onClick={() => handleReviewChange(reviewData)} />
                                     </Button>
                                         <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
                                             <FaTrashAlt className="h-4 w-4 text-gray-500" />
