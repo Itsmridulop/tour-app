@@ -51,6 +51,7 @@ export default function TourData() {
     const { deleteTour, isPending } = useDeleteTour()
     const { deleteReview } = useDeleteReview()
     const [isBooked, setIsBooked] = useState<boolean>(false)
+    const [isEditing, setIsEditing] = useState<boolean>(false)
 
     const handleReviewChange = (reviewData: ReviewType) => {
         const reviewedIn = [...(user?.data.reviewedIn || []), id]
@@ -225,7 +226,7 @@ export default function TourData() {
                     </div>
                 </div>
             </div>
-            {!user?.data.reviewedIn.some(reviewInId => reviewInId === id) && <AddReviewForm onReviewChange={handleReviewChange} />}
+            {!(user?.data.reviewedIn.some(reviewInId => reviewInId === id) || isEditing) && <AddReviewForm onReviewChange={handleReviewChange} />}
             <Reviews
                 reviews={tourData?.data.reviews}
                 renderReview={(review: ReviewType[] | TourReviewType[]) => (
@@ -242,7 +243,7 @@ export default function TourData() {
                             <span className="mt-2 flex justify-between">{reviewData.review}
                                 <div className="flex space-x-2">
                                     {(!reviewData.user?._id || `${user?.data._id}` === reviewData.user._id) && <><Button variant="ghost" size="sm">
-                                        <FaEdit className="h-4 w-4 text-gray-500" onClick={() => handleReviewChange(reviewData)} />
+                                        <FaEdit className="h-4 w-4 text-gray-500" onClick={() => setIsEditing(true)} />
                                     </Button>
                                         <Button variant="ghost" size="sm" onClick={() => handleReviewDelete({ reviewId: reviewData._id, tourId: id })}>
                                             <FaTrashAlt className="h-4 w-4 text-gray-500" />

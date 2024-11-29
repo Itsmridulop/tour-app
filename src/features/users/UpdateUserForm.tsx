@@ -11,9 +11,10 @@ function UpdateUserForm({ user, id, onClose }: { user?: UserDataType; id?: strin
         if (data.name === user?.name && (!data.photo || (typeof data.photo !== 'string' && Object.keys(data.photo).length === 0))) return;
         const userData = {
             ...data,
-            photo: data.photo[0]
+            photo: data.photo[0] ?? user?.photo
         }
         const formData = FormDataController(userData)
+
         updateUser({ formData, id }, {
             onSettled: () => reset(),
             onSuccess: () => onClose?.()
