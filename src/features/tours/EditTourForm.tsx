@@ -8,36 +8,33 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../component/Tabs"
 import { ScrollArea } from "../../component/ScrollArea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../component/Accordion"
-import { CreateTourType, TourResponse, TourType } from '@/types/tourTypes'
+import { CreateTourType, TourType } from '@/types/tourTypes'
 import { MinusCircledIcon, PlusCircledIcon } from '@radix-ui/react-icons'
 import { FC, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { fetchLocation } from '@/utils/fetchLocation'
 import { useAlert } from '@/component/Alert'
-import { UseMutateFunction } from '@tanstack/react-query'
+import { useUpdateTour } from './useUpdateTour'
+import { useCreateTour } from './useCreateTour'
 
 import TourStartDatesUpload from './TourStartDateUpload'
 
 interface TourEditFormProps {
     tour?: TourType;
-    updationFn: UseMutateFunction<TourResponse, {response: { data: { message: string; }; }; }, {
-        tourData: Partial<CreateTourType> | CreateTourType;
-        id?: string;
-    }, unknown>
     onClose?: () => void;
     title: string;
     isPending?: boolean
 }
 
-const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title, isPending }) => {
+const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, title, isPending }) => {
     const [startDate, setStartDate] = useState<string[] | undefined>(tour?.startDates)
     const [isLoading, setIsLoading] = useState(false)
+    const { updateTour } = useUpdateTour()
+    const { createTour } = useCreateTour()
 
     const { control, watch, reset, handleSubmit, register, formState: { errors } } = useForm<CreateTourType>({
         defaultValues: tour
     })
     const { showAlert } = useAlert()
-    const { id } = useParams()
 
     const { fields: locationFields, append: appendLocation, remove: removeLocation } = useFieldArray({
         control,
@@ -105,11 +102,23 @@ const TourEditForm: FC<TourEditFormProps> = ({ tour, onClose, updationFn, title,
             startDates: [...startDate || []],
             startLocation: { ...startLocaationObj }
         };
+
         setIsLoading(false)
-        updationFn({ tourData, id }, {
-            onSettled: () => reset(),
-            onSuccess: () => onClose?.()
-        });
+        // updationFn({ tourData, id }, {
+        //     onSettled: () => reset(),
+        //     onSuccess: () => onClose?.()
+        // });
+        if (tour?._id) {
+            updateTour({ tourData, id: tour._id }, {
+                onSettled: () => reset(),
+                onSuccess: () => onClose?.()
+            })
+        } else {
+            createTour({ tourData }, {
+                onSettled: () => reset(),
+                onSuccess: () => onClose?.()
+            })
+        }
     };
 
     return (

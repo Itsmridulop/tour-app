@@ -44,7 +44,7 @@ export default function TourData() {
     const { user } = useUser()
     const { bookingData } = useBookingOfUser(`${user?.data._id}`)
     const { id } = useParams()
-    const { updateTour, isPending: isUpdating } = useUpdateTour()
+    const { isPending: isUpdating } = useUpdateTour()
     const { createReview } = useCreateReviews()
     const { tourData, isLoading } = useTour(id || "")
     const { updateProfile } = useUpdateProfile()
@@ -213,7 +213,7 @@ export default function TourData() {
                                     </button>
                                 </Modal.Open>
                                 <Modal.Window name="updateTour">
-                                    <EditTourForm tour={tourData?.data} updationFn={updateTour} title="Edit Tour: " isPending={isUpdating} />
+                                    <EditTourForm tour={tourData?.data} title="Edit Tour: " isPending={isUpdating} />
                                 </Modal.Window>
                             </Modal>
                                 <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>

@@ -71,7 +71,7 @@ function UserData() {
                     </div>
                 </div>
                 {(userInfo?.data.role === 'user' && id) && <UserActicityPage id={id}/>}
-                {((userInfo?.data.role === 'guide' || userInfo?.data.role === 'lead-guide') && id) && <GuideActivityPage id={id} email={userInfo.data.email}/>}
+                {((userInfo?.data.role === 'guide' || userInfo?.data.role === 'lead-guide') && id) && <GuideActivityPage id={id} role='guide' email={userInfo.data.email}/>}
             </div>
         </div>
     )

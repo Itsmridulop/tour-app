@@ -1,7 +1,6 @@
 import { useTours } from "./useTours";
 import type { TourType } from "../../types/tourTypes";
 import { useState } from "react";
-import { useCreateTour } from "./useCreateTour";
 import { useQueryClient } from "@tanstack/react-query";
 import { ResponseType } from "@/types/userType";
 
@@ -25,7 +24,6 @@ function Tour() {
     const queryClient = useQueryClient()
     const user: ResponseType | undefined = queryClient.getQueryData(['user'])
     const { tours, isLoading } = useTours((queryStr.filterField && queryStr.filterValue) || queryStr.sortBy ? `${queryStr.filterField}` + (queryStr.filterField === 'difficulty' || queryStr.filterField === "" ? "" : '[lte]') + `=${queryStr.filterValue}&sort=${queryStr.sortBy}` : " ", queryStr.best);
-    const { createTour } = useCreateTour();
 
     const handleFilterChange = (query: QueryType) => {
         setQueryStr(query)
@@ -60,7 +58,7 @@ function Tour() {
                         </button>
                     </Modal.Open>
                     <Modal.Window name="createTour">
-                        <TourEditForm updationFn={createTour} title="Create Tour" />
+                        <TourEditForm title="Create Tour" />
                     </Modal.Window>
                 </Modal>}
             </div>

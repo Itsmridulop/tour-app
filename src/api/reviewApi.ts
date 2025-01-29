@@ -6,7 +6,7 @@ class Review {
     private api: AxiosInstance
     constructor() {
         this.api = axios.create({
-            baseURL: 'http://localhost:8080/api/v1',
+            baseURL: 'https://king-prawn-app-2gvcf.ondigitalocean.app/api/v1',
             headers: {
                 'Content-Type': 'Application/json'
             }

@@ -19,8 +19,6 @@ export default function UserActivityPage({ id }: { id: string }) {
   const { reviewData, isLoading: isReviewLoading } = useReviewOfUser(id)
   const { bookingData, isLoading } = useBookingOfUser(id)
   const { updateBooking } = useUpdateBooking()
-  // const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
-  // const [statusFilter, setStatusFilter] = useState<BookingDataType['status'] | 'all'>('all')
   const [bookings, setBookings] = useState<BookingDataType[]>(bookingData?.data ?? [])
 
   useEffect(() => {
@@ -64,7 +62,7 @@ export default function UserActivityPage({ id }: { id: string }) {
   }
 
   if (isLoading || isReviewLoading) return <Spinner />
-
+console.log(reviewData)
   return (
     <div className="container mx-auto p-4 space-y-6">
       <h1 className="text-3xl font-bold mb-6">User Account Management</h1>
@@ -105,27 +103,6 @@ export default function UserActivityPage({ id }: { id: string }) {
           <CardTitle>User Bookings</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* <div className="flex justify-between mb-4">
-            <Button
-              variant="outline"
-              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            >
-              Sort by Date {sortOrder === 'asc' ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
-            </Button>
-            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as BookingDataType['status'] | 'all')}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="booked">Booked</SelectItem>
-                <SelectItem value="confirmed">Confirmed</SelectItem>
-                <SelectItem value="paid">Paid</SelectItem>
-                <SelectItem value="canceled">Canceled</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>  */}
           <Table>
             <TableHeader>
               <TableRow>
@@ -201,7 +178,7 @@ export default function UserActivityPage({ id }: { id: string }) {
         <CardContent>
           <div className="space-y-4">
             {reviewData?.data.map((review) => (
-              <div key={review.id} className="border-b pb-4">
+              <div key={review._id} className="border-b pb-4">
                 <h3 className="font-semibold">{typeof review.tour === 'object' && review.tour.name}</h3>
                 <div className="flex items-center">
                   <span className="text-yellow-400">{'★'.repeat(review.rating)}</span>

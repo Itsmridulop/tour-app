@@ -25,7 +25,7 @@ export default function UserProfile() {
     setBookings(bookingData?.data)
   }, [bookingData?.data])
 
-  const handlePayBooking = (bookingId: string) => {
+  const handlePayBooking = () => {
     showAlert('Yet to implement')
   }
 
@@ -77,7 +77,7 @@ export default function UserProfile() {
             </CardContent>
             <CardFooter className="flex flex-wrap gap-2 justify-between">
               {!booking.paid && booking.status !== "canceled" && (
-                <Button onClick={() => handlePayBooking(booking._id)}>
+                <Button onClick={() => handlePayBooking()}>
                   <CreditCardIcon className="mr-2 h-4 w-4" /> Pay Now
                 </Button>
               )}

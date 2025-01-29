@@ -6,7 +6,7 @@ class Booking {
     private api: AxiosInstance
     constructor() {
         this.api = axios.create({
-            baseURL: 'http://localhost:8080/api/v1/bookings',
+            baseURL: 'https://king-prawn-app-2gvcf.ondigitalocean.app/api/v1/bookings',
             headers: {
                 'Content-Type': 'application/json',
             }

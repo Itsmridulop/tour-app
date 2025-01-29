@@ -15,9 +15,9 @@ import Spinner from "@/component/Spinner";
 
 function AdminProfile() {
     const { tours: sampleTours, isLoading: isTourLoading } = useTours("sort=price", false)
-    const { createTour, isPending: isCreating } = useCreateTour()
+    const { isPending: isCreating } = useCreateTour()
     const { deleteTour, isPending: isDeleting } = useDeleteTour()
-    const { updateTour, isPending: isUpdating } = useUpdateTour()
+    const { isPending: isUpdating } = useUpdateTour()
 
     if(isCreating || isDeleting || isUpdating || isTourLoading) return <Spinner/>
 
@@ -55,7 +55,7 @@ function AdminProfile() {
                                                 </Button>
                                             </Modal.Open>
                                             <Modal.Window name="updateTour">
-                                                <TourEditForm tour={tour} updationFn={updateTour} title='Edit Tour' />
+                                                <TourEditForm tour={tour} title='Edit Tour' />
                                             </Modal.Window>
                                         </Modal>
                                         <Button variant="ghost" size="sm">
@@ -74,7 +74,7 @@ function AdminProfile() {
                                     </Button>
                                 </Modal.Open>
                                 <Modal.Window name="createTour">
-                                    <TourEditForm updationFn={createTour} title='Create Tour' />
+                                    <TourEditForm title='Create Tour' />
                                 </Modal.Window>
                             </Modal>
                         </div>
