@@ -28,7 +28,7 @@ function Navbar() {
       <div className="flex-1 flex justify-center">
         <div>
           <img
-            src="src/public/img/logo-white.png"
+            src="https://res.cloudinary.com/decczwgne/image/upload/v1738169207/logo-white_mt7fza.png"
             alt="Logo"
             className="h-12 p-1"
           />
@@ -57,7 +57,7 @@ function Navbar() {
           className="flex items-center justify-center p-2 rounded-full hover:bg-white hover:text-gray-800 transition"
         >
           {(isAuth && user?.data.photo) && <UserPhoto imgSrc={user.data.photo} />}
-          {(isAuth && !user?.data.photo) && <UserPhoto imgSrc={'src/public/img/users/default.jpg'} />}
+          {(isAuth && !user?.data.photo) && <UserPhoto imgSrc={'https://res.cloudinary.com/decczwgne/image/upload/v1738167328/default_yabbiu.jpg'} />}
         </Link>
       </div>
     </nav>
