@@ -37,35 +37,38 @@ export default function Sort({ onSortChange, queryObj }: { onSortChange: (query:
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Controller
-                name="sortBy"
-                control={control}
-                render={({ field }) => (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-[210px] justify-between">
-                                Sort by: {sortOptions.find(option => option.value === field.value)?.label}
-                                <ArrowUpDown className="ml-2 h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-[210px]">
-                            {sortOptions.map((option) => (
-                                <DropdownMenuItem
-                                    key={option.value}
-                                    onSelect={() => {
-                                        field.onChange(option.value)
-                                        handleSubmit(onSubmit)()
-                                    }}
-                                    className="justify-between"
-                                >
-                                    {option.label}
-                                    {field.value === option.value && <Check className="h-4 w-4" />}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                )}
-            />
+            <div className='text-gray-600'>
+                <Controller
+                    name="sortBy"
+                    control={control}
+                    render={({ field }) => (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" className="w-[210px] justify-between">
+                                    Sort by: {sortOptions.find(option => option.value === field.value)?.label}
+                                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-[210px]">
+                                {sortOptions.map((option) => (
+                                    <DropdownMenuItem
+                                        key={option.value}
+                                        onSelect={() => {
+                                            field.onChange(option.value)
+                                            handleSubmit(onSubmit)()
+                                        }}
+                                        className="justify-between"
+                                    >
+                                        {option.label}
+                                        {field.value === option.value && <Check className="h-4 w-4" />}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                />
+            </div>
+
         </form>
     )
 }

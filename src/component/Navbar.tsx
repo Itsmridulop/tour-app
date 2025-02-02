@@ -93,7 +93,7 @@ function Navbar() {
           {menuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
         <img
-          src="src/public/img/logo-white.png"
+          src="https://res.cloudinary.com/decczwgne/image/upload/v1738169207/logo-white_mt7fza.png"
           alt="Logo"
           className="h-10 p-1"
         />
@@ -131,7 +131,7 @@ function Navbar() {
           {isAuth && user?.data.photo ? (
             <UserPhoto imgSrc={user.data.photo} />
           ) : (
-            <UserPhoto imgSrc={"src/public/img/users/default.jpg"} />
+            <UserPhoto imgSrc={"https://res.cloudinary.com/decczwgne/image/upload/v1738167328/default_yabbiu.jpg"} />
           )}
         </Link>
       </div>
@@ -149,7 +149,7 @@ function Navbar() {
             {isAuth && user?.data.photo ? (
               <UserPhoto imgSrc={user.data.photo} />
             ) : (
-              <UserPhoto imgSrc={"src/public/img/users/default.jpg"} />
+              <UserPhoto imgSrc={"https://res.cloudinary.com/decczwgne/image/upload/v1738167328/default_yabbiu.jpg"} />
             )}
           </Link>
           {isAuth && (

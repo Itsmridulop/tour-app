@@ -18,11 +18,11 @@ export default function Filter({ onFilterChange, queryObj }: { onFilterChange: (
         },
     });
 
-    const {showAlert} = useAlert()
+    const { showAlert } = useAlert()
     const selectedFilter = watch("selectedFilter");
 
     const onSubmit = (data: FilterFormValues) => {
-        if(parseInt(data.filterValue) > 5 && selectedFilter === 'ratingsAverage') {
+        if (parseInt(data.filterValue) > 5 && selectedFilter === 'ratingsAverage') {
             showAlert('Rating must not be greater then 5')
             return
         }
@@ -42,9 +42,11 @@ export default function Filter({ onFilterChange, queryObj }: { onFilterChange: (
                     control={control}
                     render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select difficulty" />
-                            </SelectTrigger>
+                            <div className='text-gray-400'>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select difficulty" />
+                                </SelectTrigger>
+                            </div>
                             <SelectContent>
                                 <SelectItem value="easy">Easy</SelectItem>
                                 <SelectItem value="medium">Medium</SelectItem>
@@ -88,9 +90,11 @@ export default function Filter({ onFilterChange, queryObj }: { onFilterChange: (
                                     setValue("filterValue", ""); // Reset filterValue when selectedFilter changes
                                 }}
                             >
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select a filter" />
-                                </SelectTrigger>
+                                <div className='text-gray-600'>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select a filter" />
+                                    </SelectTrigger>
+                                </div>
                                 <SelectContent>
                                     <SelectItem value="maxGroupSize">Max Group Size</SelectItem>
                                     <SelectItem value="ratingsAverage">Max Ratings Average</SelectItem>
