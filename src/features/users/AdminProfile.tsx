@@ -19,13 +19,17 @@ function AdminProfile() {
     const { deleteTour, isPending: isDeleting } = useDeleteTour()
     const { isPending: isUpdating } = useUpdateTour()
 
-    if(isCreating || isDeleting || isUpdating || isTourLoading) return <Spinner/>
+    if (isCreating || isDeleting || isUpdating || isTourLoading) return <Spinner />
 
     return (
         <>
-            <div className='flex flex-col md:flex-row justify-between items-center py-4 space-x-3'>
-                <MonthlyPlanGraph />
-                <Stats />
+            <div className="flex flex-col gap-4 md:flex-row md:gap-8 p-4 w-[98%]">
+                <div className="w-full md:w-1/2">
+                    <MonthlyPlanGraph />
+                </div>
+                <div className="w-full md:w-1/2">
+                    <Stats />
+                </div>
             </div>
             <div className='flex-1 p-4'>
 

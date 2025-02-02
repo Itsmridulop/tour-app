@@ -191,37 +191,64 @@ export default function TourData() {
                             </div>
                         ))}
                     </div>
-
                     <div className="p-6 space-y-4">
-                        <div className="flex space-x-4">
-                            <Modal>
-                                <Modal.Open opens="bookTour">
-                                    <button className={`flex bg-green-500 items-center  text-white font-bold py-2 px-4 rounded transition transform ${!(bookingData?.data.some(booking => typeof booking.tour === 'object' && booking.tour._id === id) || isBooked) ? 'hover:scale-105 hover:bg-green-700' : 'bg-green-900'}`} disabled={(bookingData?.data.some(booking => typeof booking.tour === 'object' && booking.tour._id === id) || isBooked)}>
-                                        <FaPaperPlane className="mr-2" />
-                                        {(bookingData?.data.some(booking => typeof booking.tour === 'object' && booking.tour._id === id) || isBooked) ? 'Booked' : 'Book Tour'}
+                        <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4 w-full">
+                            <div className="w-full sm:w-auto">
+
+                                <Modal>
+                                    <Modal.Open opens="bookTour">
+                                        <button
+                                            className={`w-full sm:w-auto flex justify-center bg-green-500 items-center text-white font-bold py-2 px-4 rounded transition transform ${!(
+                                                bookingData?.data.some((booking) => typeof booking.tour === "object" && booking.tour._id === id) ||
+                                                isBooked
+                                            )
+                                                ? "hover:scale-105 hover:bg-green-700"
+                                                : "bg-green-900"
+                                                }`}
+                                            disabled={
+                                                bookingData?.data.some((booking) => typeof booking.tour === "object" && booking.tour._id === id) ||
+                                                isBooked
+                                            }
+                                        >
+                                            <FaPaperPlane className="mr-2" />
+                                            {bookingData?.data.some((booking) => typeof booking.tour === "object" && booking.tour._id === id) ||
+                                                isBooked
+                                                ? "Booked"
+                                                : "Book Tour"}
+                                        </button>
+                                    </Modal.Open>
+                                    <Modal.Window name="bookTour">
+                                        <CreateBookingForm onBooked={setIsBooked} />
+                                    </Modal.Window>
+                                </Modal>
+                            </div>
+
+                            {(user?.data.role === "admin" || user?.data.role === "lead-guide") && (
+                                <>
+                                    <Modal>
+                                        <Modal.Open opens="updateTour">
+                                            <button className="w-full sm:w-auto flex justify-center items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
+                                                <FaEdit className="mr-2" />
+                                                Edit Tour
+                                            </button>
+                                        </Modal.Open>
+                                        <Modal.Window name="updateTour">
+                                            <EditTourForm tour={tourData?.data} title="Edit Tour: " isPending={isUpdating} />
+                                        </Modal.Window>
+                                    </Modal>
+
+                                    <button
+                                        className={`w-full sm:w-auto flex justify-center items-center ${isPending ? "bg-gray-600" : "bg-red-600"
+                                            } text-white font-bold py-2 px-4 rounded ${isPending ? "hover:bg-gray-800" : "hover:bg-red-800"
+                                            } transition transform hover:scale-105`}
+                                        disabled={isPending}
+                                        onClick={() => deleteTour(tourData?.data._id ?? "")}
+                                    >
+                                        <FaTrash className="mr-2" />
+                                        Delete Tour
                                     </button>
-                                </Modal.Open>
-                                <Modal.Window name="bookTour">
-                                    <CreateBookingForm onBooked={setIsBooked} />
-                                </Modal.Window>
-                            </Modal>
-                            {(user?.data.role === 'admin' || user?.data.role === 'lead-guide') && <><Modal>
-                                <Modal.Open opens="updateTour">
-                                    <button className="flex items-center bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition transform hover:scale-105">
-                                        <FaEdit className="mr-2" />
-                                        Edit Tour
-                                    </button>
-                                </Modal.Open>
-                                <Modal.Window name="updateTour">
-                                    <EditTourForm tour={tourData?.data} title="Edit Tour: " isPending={isUpdating} />
-                                </Modal.Window>
-                            </Modal>
-                                <button className={`flex items-center ${isPending ? 'bg-gray-600' : 'bg-red-600'} text-white font-bold py-2 px-4 rounded ${isPending ? 'hover:bg-gray-800' : 'hover:bg-red-800'} transition transform hover:scale-105`} disabled={isPending} onClick={() => deleteTour(tourData?.data._id ?? "")}>
-                                    <FaTrash className="mr-2" />
-                                    Delete Tour
-                                </button>
-                            </>
-                            }
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
