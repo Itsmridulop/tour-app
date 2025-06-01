@@ -6,17 +6,26 @@ class Authenication {
 
   constructor() {
     this.api = axios.create({
-      baseURL: "https://king-prawn-app-2gvcf.ondigitalocean.app/api/v1/users"
+      baseURL: "http://localhost:8080/api/v1/users",
     });
   }
 
-  public async signup(userData: { name: string; email: string; password: string; confirmPassword: string }): Promise<ResponseType> {
+  public async signup(userData: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.post("/signup", userData, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
+      const response: AxiosResponse<ResponseType> = await this.api.post(
+        "/signup",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
       this.saveToken(response.data.token);
       return response.data;
     } catch (error) {
@@ -25,14 +34,21 @@ class Authenication {
     }
   }
 
-  public async login(userData: { email: string; password: string }): Promise<ResponseType> {
+  public async login(userData: {
+    email: string;
+    password: string;
+  }): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.post("/login", userData, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      this.removeToken()
+      const response: AxiosResponse<ResponseType> = await this.api.post(
+        "/login",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      this.removeToken();
       this.saveToken(response.data.token);
       return response.data;
     } catch (error) {
@@ -43,79 +59,101 @@ class Authenication {
 
   public async getCurrentUser(): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.get('/me', {
+      const response: AxiosResponse<ResponseType> = await this.api.get("/me", {
         headers: {
-          'Authorization': `Bearer ${this.gettoken()}`,
-          "Content-Type": "application/json"
-        }
-      })
-      return response.data
+          Authorization: `Bearer ${this.gettoken()}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
     } catch (error) {
-      console.error('Error in getting your info', error)
-      throw error
+      console.error("Error in getting your info", error);
+      throw error;
     }
   }
 
   public async updateProfile(userData: FormData): Promise<ResponseType> {
+    console.log(userData);
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.patch('/updateMe', userData, {
-        headers: {
-          'Authorization': `Bearer ${this.gettoken()}`,
-          'Content-Type': 'multipart/form-data',
-        }
-      })
-      return response.data
+      const response: AxiosResponse<ResponseType> = await this.api.patch(
+        "/updateMe",
+        userData,
+        {
+          headers: {
+            Authorization: `Bearer ${this.gettoken()}`,
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      return response.data;
     } catch (error) {
-      console.error('Error in update your profile', error)
-      throw error
+      console.error("Error in update your profile", error);
+      throw error;
     }
   }
 
-  public async updatePassword(passwordData: UserPasswordType): Promise<ResponseType> {
+  public async updatePassword(
+    passwordData: UserPasswordType,
+  ): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.patch('/updatePassword', passwordData, {
-        headers: {
-          'Authorization': `Bearer ${this.gettoken()}`,
-          "Content-Type": "application/json"
-        }
-      })
-      this.removeToken()
-      this.saveToken(response.data.token)
-      return response.data
+      const response: AxiosResponse<ResponseType> = await this.api.patch(
+        "/updatePassword",
+        passwordData,
+        {
+          headers: {
+            Authorization: `Bearer ${this.gettoken()}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      this.removeToken();
+      this.saveToken(response.data.token);
+      return response.data;
     } catch (error) {
-      console.error('Error in update your password', error)
-      throw error
+      console.error("Error in update your password", error);
+      throw error;
     }
   }
 
-  public async forgotPassword(data: { email: string }): Promise<{ status: string; message: string }> {
+  public async forgotPassword(data: {
+    email: string;
+  }): Promise<{ status: string; message: string }> {
     try {
-      const response: AxiosResponse<{ status: string; message: string }> = await this.api.post('/forgotPassword', data, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      return response.data
+      const response: AxiosResponse<{ status: string; message: string }> =
+        await this.api.post("/forgotPassword", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      return response.data;
     } catch (error) {
-      console.error('Error while resettting your pasworrd', error)
-      throw error
+      console.error("Error while resettting your pasworrd", error);
+      throw error;
     }
   }
 
-  public async resetPassword(data: { token?: string; password: string; confirmPassword: string }): Promise<ResponseType> {
+  public async resetPassword(data: {
+    token?: string;
+    password: string;
+    confirmPassword: string;
+  }): Promise<ResponseType> {
     try {
-      const response: AxiosResponse<ResponseType> = await this.api.patch(`/resetPassword/${data.token}`, {
-        password: data.password,
-        confirmPassword: data.confirmPassword
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      return response.data
+      const response: AxiosResponse<ResponseType> = await this.api.patch(
+        `/resetPassword/${data.token}`,
+        {
+          password: data.password,
+          confirmPassword: data.confirmPassword,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      return response.data;
     } catch (error) {
-      console.error('Error while resetting your password', error)
-      throw error
+      console.error("Error while resetting your password", error);
+      throw error;
     }
   }
 

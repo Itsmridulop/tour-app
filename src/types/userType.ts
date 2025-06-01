@@ -1,21 +1,21 @@
 interface Location {
-  coordinates: [string],
-  address: string,
-  description: string,
-  type: string,
+  coordinates: [string];
+  address: string;
+  description: string;
+  type: string;
 }
 
 export interface Tour {
-  _id: string,
-  name: string,
-  startLocation: Location,
-  duration: number,
-  description: string,
-  maxGroupSize: number,
-  difficulty: string,
-  price: number,
-  summary: string,
-  imageCover: string
+  _id: string;
+  name: string;
+  startLocation: Location;
+  duration: number;
+  description: string;
+  maxGroupSize: number;
+  difficulty: string;
+  price: number;
+  summary: string;
+  imageCover: string;
 }
 
 export interface UserDataType {
@@ -23,10 +23,11 @@ export interface UserDataType {
   name: string;
   email: string;
   photo: string;
+  resentBooked: string;
   role: string;
-  active: boolean,
-  reviewedIn: string[],
-  tour?: Tour[]
+  active: boolean;
+  reviewedIn: string[];
+  tour?: Tour[];
 }
 
 export interface ResponseType {
@@ -41,11 +42,11 @@ export interface CreateUserType {
   password: string;
   confirmPassword: string;
   photo?: File;
-  email: string
+  email: string;
 }
 
 export interface UserPasswordType {
   password: string;
   newPassword: string;
-  newPasswordConfirm: string
+  newPasswordConfirm: string;
 }
